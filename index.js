@@ -368,6 +368,17 @@ const TOOLS = [
   },
 ];
 
+async function resolvePlugin(input) {
+  if (input.includes('/')) return input;
+  const plugins = await wp('GET', '/plugins');
+  const match = plugins.find(p =>
+    p.name.toLowerCase().includes(input.toLowerCase()) ||
+    p.plugin.toLowerCase().includes(input.toLowerCase())
+  );
+  if (!match) throw new Error(`Plugin not found: "${input}". Use get_plugins to see available plugins.`);
+  return match.plugin;
+}
+
 async function callTool(name, args) {
   switch (name) {
     case 'get_posts': {
@@ -471,16 +482,19 @@ async function callTool(name, args) {
       return { plugin: plugin.plugin, name: plugin.name, status: plugin.status, version: plugin.version };
     }
     case 'activate_plugin': {
-      const plugin = await wp('PUT', `/plugins/${args.plugin}`, { status: 'active' });
+      const pid = await resolvePlugin(args.plugin);
+      const plugin = await wp('PUT', `/plugins/${pid}`, { status: 'active' });
       return { plugin: plugin.plugin, name: plugin.name, status: plugin.status };
     }
     case 'deactivate_plugin': {
-      const plugin = await wp('PUT', `/plugins/${args.plugin}`, { status: 'inactive' });
+      const pid = await resolvePlugin(args.plugin);
+      const plugin = await wp('PUT', `/plugins/${pid}`, { status: 'inactive' });
       return { plugin: plugin.plugin, name: plugin.name, status: plugin.status };
     }
     case 'delete_plugin': {
-      await wp('DELETE', `/plugins/${args.plugin}?force=true`);
-      return { deleted: true, plugin: args.plugin };
+      const pid = await resolvePlugin(args.plugin);
+      await wp('DELETE', `/plugins/${pid}?force=true`);
+      return { deleted: true, plugin: pid };
     }
     case 'install_theme': {
       const body = { slug: args.slug, status: args.activate ? 'active' : 'inactive' };
