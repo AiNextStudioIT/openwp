@@ -297,7 +297,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        plugin: { type: 'string', description: 'Plugin file path as returned by get_plugins (e.g. "elementor/elementor.php")' },
+        plugin: { type: 'string', description: 'Plugin identifier as returned by get_plugins (e.g. "elementor/elementor" — no .php extension)' },
       },
       required: ['plugin'],
     },
@@ -308,7 +308,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        plugin: { type: 'string', description: 'Plugin file path as returned by get_plugins (e.g. "elementor/elementor.php")' },
+        plugin: { type: 'string', description: 'Plugin identifier as returned by get_plugins (e.g. "elementor/elementor" — no .php extension)' },
       },
       required: ['plugin'],
     },
@@ -319,7 +319,7 @@ const TOOLS = [
     inputSchema: {
       type: 'object',
       properties: {
-        plugin: { type: 'string', description: 'Plugin file path (e.g. "elementor/elementor.php")' },
+        plugin: { type: 'string', description: 'Plugin identifier as returned by get_plugins (e.g. "elementor/elementor" — no .php extension)' },
       },
       required: ['plugin'],
     },
