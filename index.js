@@ -279,6 +279,74 @@ const TOOLS = [
     description: 'Get list of installed WordPress themes.',
     inputSchema: { type: 'object', properties: {} },
   },
+  {
+    name: 'install_plugin',
+    description: 'Install a plugin from WordPress.org repository by slug (e.g. "elementor", "woocommerce", "wordpress-seo").',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        slug: { type: 'string', description: 'Plugin slug from wordpress.org/plugins/<slug>' },
+        activate: { type: 'boolean', description: 'Activate immediately after install (default: false)', default: false },
+      },
+      required: ['slug'],
+    },
+  },
+  {
+    name: 'activate_plugin',
+    description: 'Activate an installed WordPress plugin.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        plugin: { type: 'string', description: 'Plugin file path as returned by get_plugins (e.g. "elementor/elementor.php")' },
+      },
+      required: ['plugin'],
+    },
+  },
+  {
+    name: 'deactivate_plugin',
+    description: 'Deactivate an active WordPress plugin.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        plugin: { type: 'string', description: 'Plugin file path as returned by get_plugins (e.g. "elementor/elementor.php")' },
+      },
+      required: ['plugin'],
+    },
+  },
+  {
+    name: 'delete_plugin',
+    description: 'Delete an installed WordPress plugin. Plugin must be deactivated first.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        plugin: { type: 'string', description: 'Plugin file path (e.g. "elementor/elementor.php")' },
+      },
+      required: ['plugin'],
+    },
+  },
+  {
+    name: 'install_theme',
+    description: 'Install a theme from WordPress.org repository by slug (e.g. "astra", "hello-elementor", "twentytwentyfive").',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        slug: { type: 'string', description: 'Theme slug from wordpress.org/themes/<slug>' },
+        activate: { type: 'boolean', description: 'Activate immediately after install (default: false)', default: false },
+      },
+      required: ['slug'],
+    },
+  },
+  {
+    name: 'activate_theme',
+    description: 'Activate an installed WordPress theme.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        stylesheet: { type: 'string', description: 'Theme stylesheet (folder name) as returned by get_themes (e.g. "astra")' },
+      },
+      required: ['stylesheet'],
+    },
+  },
   // Site info
   {
     name: 'get_site_info',
@@ -396,6 +464,32 @@ async function callTool(name, args) {
     case 'get_themes': {
       const themes = await wp('GET', '/themes');
       return themes.map(t => ({ name: t.name.rendered, stylesheet: t.stylesheet, status: t.status, version: t.version }));
+    }
+    case 'install_plugin': {
+      const body = { slug: args.slug, status: args.activate ? 'active' : 'inactive' };
+      const plugin = await wp('POST', '/plugins', body);
+      return { plugin: plugin.plugin, name: plugin.name, status: plugin.status, version: plugin.version };
+    }
+    case 'activate_plugin': {
+      const plugin = await wp('POST', `/plugins/${encodeURIComponent(args.plugin)}`, { status: 'active' });
+      return { plugin: plugin.plugin, name: plugin.name, status: plugin.status };
+    }
+    case 'deactivate_plugin': {
+      const plugin = await wp('POST', `/plugins/${encodeURIComponent(args.plugin)}`, { status: 'inactive' });
+      return { plugin: plugin.plugin, name: plugin.name, status: plugin.status };
+    }
+    case 'delete_plugin': {
+      await wp('DELETE', `/plugins/${encodeURIComponent(args.plugin)}`);
+      return { deleted: true, plugin: args.plugin };
+    }
+    case 'install_theme': {
+      const body = { slug: args.slug, status: args.activate ? 'active' : 'inactive' };
+      const theme = await wp('POST', '/themes', body);
+      return { stylesheet: theme.stylesheet, name: theme.name?.rendered, status: theme.status, version: theme.version };
+    }
+    case 'activate_theme': {
+      const theme = await wp('POST', `/themes/${encodeURIComponent(args.stylesheet)}`, { status: 'active' });
+      return { stylesheet: theme.stylesheet, name: theme.name?.rendered, status: theme.status };
     }
     case 'get_site_info': {
       const settings = await wp('GET', '/settings');

@@ -84,7 +84,13 @@ Add a new password (e.g. "Claude"), copy the generated string.
 | `update_user` | Update a user |
 | `get_media` | Browse media library |
 | `get_plugins` | List installed plugins |
+| `install_plugin` | Install a plugin from WordPress.org |
+| `activate_plugin` | Activate an installed plugin |
+| `deactivate_plugin` | Deactivate a plugin |
+| `delete_plugin` | Delete a plugin |
 | `get_themes` | List installed themes |
+| `install_theme` | Install a theme from WordPress.org |
+| `activate_theme` | Activate an installed theme |
 | `get_site_info` | Get site settings |
 | `search_content` | Search across all content |
 
