@@ -110,15 +110,25 @@ Once connected, just use natural language:
 "Show me all draft posts"
 "Publish a post titled 'AI Trends 2026' in the Technology category"
 "Add a new editor user: mario@example.com"
-"Install the Elementor plugin and activate it"
+"Install Elementor and activate it"
 "What plugins are currently active?"
 "Update the site tagline to 'Built with AI'"
 "How many users does this site have?"
+"Show me all pending comments"
+"Approve comment #42"
+"Upload this image to the media library: https://example.com/photo.jpg"
+"Show me all WooCommerce orders from this week"
+"Mark order #123 as completed"
+"Create a product called 'AI Course' priced at 97.00"
+"Publish all draft posts at once"
+"What custom post types does this site have?"
 ```
 
 ---
 
-## Available Tools (26 total)
+## Available Tools (42 total)
+
+### Content
 
 | Tool | Description |
 |------|-------------|
@@ -127,27 +137,76 @@ Once connected, just use natural language:
 | `create_post` | Create a post |
 | `update_post` | Update a post |
 | `delete_post` | Delete a post (trash or permanent) |
+| `bulk_update_posts` | Change status of multiple posts at once |
 | `get_pages` | List pages |
 | `create_page` | Create a page |
 | `update_page` | Update a page |
+| `get_custom_posts` | Get posts from any custom post type (CPT) |
+| `search_content` | Search across all content |
+
+### Taxonomy
+
+| Tool | Description |
+|------|-------------|
 | `get_categories` | List categories |
 | `create_category` | Create a category |
 | `get_tags` | List tags |
 | `create_tag` | Create a tag |
+
+### Media
+
+| Tool | Description |
+|------|-------------|
+| `get_media` | Browse media library |
+| `upload_media_from_url` | Download a file from URL and upload to media library |
+
+### Comments
+
+| Tool | Description |
+|------|-------------|
+| `get_comments` | List comments (filter by post, status) |
+| `moderate_comment` | Approve, hold, spam or trash a comment |
+| `delete_comment` | Permanently delete a comment |
+
+### Users
+
+| Tool | Description |
+|------|-------------|
 | `get_users` | List users |
 | `create_user` | Create a user |
 | `update_user` | Update a user |
-| `get_media` | Browse media library |
+
+### Plugins & Themes
+
+| Tool | Description |
+|------|-------------|
 | `get_plugins` | List installed plugins |
-| `install_plugin` | Install a plugin from WordPress.org |
+| `install_plugin` | Install a plugin from WordPress.org by name or slug |
 | `activate_plugin` | Activate an installed plugin |
 | `deactivate_plugin` | Deactivate a plugin |
 | `delete_plugin` | Delete a plugin |
 | `get_themes` | List installed themes |
 | `install_theme` | Install a theme from WordPress.org |
 | `activate_theme` | Activate an installed theme |
+
+### Site Settings
+
+| Tool | Description |
+|------|-------------|
 | `get_site_info` | Get site settings (title, URL, timezone, language) |
-| `search_content` | Search across all content |
+| `update_site_settings` | Update site title, tagline, email, timezone, etc. |
+| `get_post_types` | List all available post types including CPT |
+
+### WooCommerce *(requires WooCommerce active)*
+
+| Tool | Description |
+|------|-------------|
+| `get_woo_products` | List products |
+| `create_woo_product` | Create a product |
+| `update_woo_product` | Update a product |
+| `get_woo_orders` | List orders (filter by status, customer, date) |
+| `update_woo_order` | Update order status or add customer note |
+| `get_woo_customers` | List customers |
 
 ---
 
