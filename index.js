@@ -18,19 +18,29 @@ if (!WP_URL || !WP_USERNAME || !WP_APP_PASSWORD) {
 
 const auth = Buffer.from(`${WP_USERNAME}:${WP_APP_PASSWORD}`).toString('base64');
 const API = `${WP_URL}/wp-json/wp/v2`;
+const WC_API = `${WP_URL}/wp-json/wc/v3`;
 
 async function wp(method, endpoint, body) {
   const opts = {
     method,
-    headers: {
-      'Authorization': `Basic ${auth}`,
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(`${API}${endpoint}`, opts);
   const text = await res.text();
   if (!res.ok) throw new Error(`WP API ${res.status}: ${text}`);
+  return text ? JSON.parse(text) : {};
+}
+
+async function wc(method, endpoint, body) {
+  const opts = {
+    method,
+    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(`${WC_API}${endpoint}`, opts);
+  const text = await res.text();
+  if (!res.ok) throw new Error(`WC API ${res.status}: ${text}`);
   return text ? JSON.parse(text) : {};
 }
 
@@ -354,6 +364,21 @@ const TOOLS = [
     inputSchema: { type: 'object', properties: {} },
   },
   {
+    name: 'update_site_settings',
+    description: 'Update WordPress site settings: title, tagline, admin email, timezone, date format, etc.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        title: { type: 'string', description: 'Site title' },
+        description: { type: 'string', description: 'Site tagline' },
+        email: { type: 'string', description: 'Admin email' },
+        timezone: { type: 'string', description: 'Timezone string (e.g. Europe/Rome)' },
+        date_format: { type: 'string', description: 'Date format (e.g. d/m/Y)' },
+        posts_per_page: { type: 'number', description: 'Posts per page' },
+      },
+    },
+  },
+  {
     name: 'search_content',
     description: 'Search across all WordPress content (posts, pages, categories).',
     inputSchema: {
@@ -364,6 +389,181 @@ const TOOLS = [
         per_page: { type: 'number', default: 10 },
       },
       required: ['query'],
+    },
+  },
+  // Comments
+  {
+    name: 'get_comments',
+    description: 'Get WordPress comments. Filter by post, status, author.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        post: { type: 'number', description: 'Filter by post ID' },
+        status: { type: 'string', description: 'approved, hold, spam, trash (default: approved)' },
+        per_page: { type: 'number', default: 20 },
+        search: { type: 'string', description: 'Search in comment content' },
+      },
+    },
+  },
+  {
+    name: 'moderate_comment',
+    description: 'Approve, hold, mark as spam or trash a comment.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', description: 'Comment ID' },
+        status: { type: 'string', description: 'approved, hold, spam, trash' },
+      },
+      required: ['id', 'status'],
+    },
+  },
+  {
+    name: 'delete_comment',
+    description: 'Permanently delete a WordPress comment.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', description: 'Comment ID' },
+      },
+      required: ['id'],
+    },
+  },
+  // Media upload
+  {
+    name: 'upload_media_from_url',
+    description: 'Download an image or file from a URL and upload it to the WordPress media library.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        url: { type: 'string', description: 'Public URL of the file to upload' },
+        title: { type: 'string', description: 'Title for the media item (optional)' },
+        alt_text: { type: 'string', description: 'Alt text for images (optional)' },
+      },
+      required: ['url'],
+    },
+  },
+  // Custom post types
+  {
+    name: 'get_post_types',
+    description: 'List all available WordPress post types including custom post types (CPT).',
+    inputSchema: { type: 'object', properties: {} },
+  },
+  {
+    name: 'get_custom_posts',
+    description: 'Get posts from any WordPress post type including custom post types (e.g. "product", "event", "portfolio").',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        post_type: { type: 'string', description: 'Post type slug (e.g. "product", "event")' },
+        status: { type: 'string', default: 'publish' },
+        per_page: { type: 'number', default: 10 },
+        search: { type: 'string' },
+      },
+      required: ['post_type'],
+    },
+  },
+  // Bulk operations
+  {
+    name: 'bulk_update_posts',
+    description: 'Update the status of multiple posts at once (publish, draft, trash).',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        ids: { type: 'array', items: { type: 'number' }, description: 'Array of post IDs' },
+        status: { type: 'string', description: 'New status: publish, draft, pending, trash' },
+      },
+      required: ['ids', 'status'],
+    },
+  },
+  // WooCommerce
+  {
+    name: 'get_woo_products',
+    description: 'List WooCommerce products. Requires WooCommerce installed and active.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', description: 'publish, draft, pending (default: publish)' },
+        per_page: { type: 'number', default: 10 },
+        search: { type: 'string' },
+        category: { type: 'string', description: 'Category slug or ID' },
+      },
+    },
+  },
+  {
+    name: 'create_woo_product',
+    description: 'Create a new WooCommerce product.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', description: 'Product name' },
+        type: { type: 'string', description: 'simple, variable, grouped, external (default: simple)' },
+        regular_price: { type: 'string', description: 'Regular price (e.g. "29.99")' },
+        sale_price: { type: 'string', description: 'Sale price (optional)' },
+        description: { type: 'string', description: 'Full product description' },
+        short_description: { type: 'string', description: 'Short description' },
+        status: { type: 'string', default: 'publish' },
+        sku: { type: 'string', description: 'SKU code' },
+        manage_stock: { type: 'boolean' },
+        stock_quantity: { type: 'number' },
+        categories: { type: 'array', items: { type: 'object' }, description: 'Array of {id: category_id}' },
+      },
+      required: ['name'],
+    },
+  },
+  {
+    name: 'update_woo_product',
+    description: 'Update an existing WooCommerce product.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', description: 'Product ID' },
+        name: { type: 'string' },
+        regular_price: { type: 'string' },
+        sale_price: { type: 'string' },
+        description: { type: 'string' },
+        status: { type: 'string' },
+        stock_quantity: { type: 'number' },
+        manage_stock: { type: 'boolean' },
+      },
+      required: ['id'],
+    },
+  },
+  {
+    name: 'get_woo_orders',
+    description: 'List WooCommerce orders.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        status: { type: 'string', description: 'pending, processing, on-hold, completed, cancelled, refunded, failed (default: any)' },
+        per_page: { type: 'number', default: 10 },
+        customer: { type: 'number', description: 'Filter by customer ID' },
+        after: { type: 'string', description: 'ISO date — orders after this date' },
+      },
+    },
+  },
+  {
+    name: 'update_woo_order',
+    description: 'Update a WooCommerce order status or note.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        id: { type: 'number', description: 'Order ID' },
+        status: { type: 'string', description: 'pending, processing, completed, cancelled, refunded' },
+        customer_note: { type: 'string', description: 'Note visible to customer' },
+      },
+      required: ['id'],
+    },
+  },
+  {
+    name: 'get_woo_customers',
+    description: 'List WooCommerce customers.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        per_page: { type: 'number', default: 10 },
+        search: { type: 'string', description: 'Search by name or email' },
+        role: { type: 'string', description: 'customer, subscriber (default: customer)' },
+      },
     },
   },
 ];
@@ -514,6 +714,103 @@ async function callTool(name, args) {
       if (args.type && args.type !== 'all') params.set('type', args.type);
       const results = await wp('GET', `/search?${params}`);
       return results.map(r => ({ id: r.id, title: r.title, type: r.type, url: r.url }));
+    }
+    case 'update_site_settings': {
+      const settings = await wp('POST', '/settings', args);
+      return { title: settings.title, description: settings.description, email: settings.email, timezone: settings.timezone };
+    }
+    case 'get_comments': {
+      const params = new URLSearchParams({ per_page: args.per_page || 20, status: args.status || 'approved' });
+      if (args.post) params.set('post', args.post);
+      if (args.search) params.set('search', args.search);
+      const comments = await wp('GET', `/comments?${params}`);
+      return comments.map(c => ({ id: c.id, post: c.post, author_name: c.author_name, content: c.content?.rendered?.replace(/<[^>]+>/g, '').trim(), status: c.status, date: c.date }));
+    }
+    case 'moderate_comment': {
+      const c = await wp('POST', `/comments/${args.id}`, { status: args.status });
+      return { id: c.id, status: c.status };
+    }
+    case 'delete_comment': {
+      await wp('DELETE', `/comments/${args.id}?force=true`);
+      return { deleted: true, id: args.id };
+    }
+    case 'upload_media_from_url': {
+      const fileRes = await fetch(args.url);
+      if (!fileRes.ok) throw new Error(`Cannot fetch URL: ${fileRes.status}`);
+      const contentType = fileRes.headers.get('content-type') || 'application/octet-stream';
+      const filename = args.url.split('/').pop().split('?')[0] || 'upload';
+      const buffer = await fileRes.arrayBuffer();
+      const uploadRes = await fetch(`${API}/media`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Basic ${auth}`,
+          'Content-Type': contentType,
+          'Content-Disposition': `attachment; filename="${filename}"`,
+        },
+        body: buffer,
+      });
+      const text = await uploadRes.text();
+      if (!uploadRes.ok) throw new Error(`WP Media API ${uploadRes.status}: ${text}`);
+      const media = JSON.parse(text);
+      if (args.title || args.alt_text) {
+        await wp('POST', `/media/${media.id}`, { title: args.title, alt_text: args.alt_text });
+      }
+      return { id: media.id, url: media.source_url, title: media.title?.rendered, type: media.media_type };
+    }
+    case 'get_post_types': {
+      const types = await wp('GET', '/types');
+      return Object.values(types).map(t => ({ slug: t.slug, name: t.name, rest_base: t.rest_base, hierarchical: t.hierarchical }));
+    }
+    case 'get_custom_posts': {
+      const params = new URLSearchParams({ per_page: args.per_page || 10, status: args.status || 'publish' });
+      if (args.search) params.set('search', args.search);
+      const types = await wp('GET', '/types');
+      const typeObj = Object.values(types).find(t => t.slug === args.post_type);
+      if (!typeObj) throw new Error(`Post type "${args.post_type}" not found. Use get_post_types to see available types.`);
+      const rest_base = typeObj.rest_base;
+      const posts = await wp('GET', `/${rest_base}?${params}`);
+      return posts.map(p => ({ id: p.id, title: p.title?.rendered, status: p.status, date: p.date, link: p.link }));
+    }
+    case 'bulk_update_posts': {
+      const results = await Promise.all(
+        args.ids.map(id => wp('POST', `/posts/${id}`, { status: args.status }).then(p => ({ id: p.id, status: p.status })).catch(e => ({ id, error: e.message })))
+      );
+      return results;
+    }
+    case 'get_woo_products': {
+      const params = new URLSearchParams({ per_page: args.per_page || 10, status: args.status || 'publish' });
+      if (args.search) params.set('search', args.search);
+      if (args.category) params.set('category', args.category);
+      const products = await wc('GET', `/products?${params}`);
+      return products.map(p => ({ id: p.id, name: p.name, status: p.status, price: p.price, regular_price: p.regular_price, stock_status: p.stock_status, sku: p.sku }));
+    }
+    case 'create_woo_product': {
+      const product = await wc('POST', '/products', args);
+      return { id: product.id, name: product.name, status: product.status, price: product.price, permalink: product.permalink };
+    }
+    case 'update_woo_product': {
+      const { id, ...data } = args;
+      const product = await wc('PUT', `/products/${id}`, data);
+      return { id: product.id, name: product.name, status: product.status, price: product.price };
+    }
+    case 'get_woo_orders': {
+      const params = new URLSearchParams({ per_page: args.per_page || 10 });
+      if (args.status) params.set('status', args.status);
+      if (args.customer) params.set('customer', args.customer);
+      if (args.after) params.set('after', args.after);
+      const orders = await wc('GET', `/orders?${params}`);
+      return orders.map(o => ({ id: o.id, status: o.status, total: o.total, currency: o.currency, date_created: o.date_created, customer_email: o.billing?.email, items: o.line_items?.length }));
+    }
+    case 'update_woo_order': {
+      const { id, ...data } = args;
+      const order = await wc('PUT', `/orders/${id}`, data);
+      return { id: order.id, status: order.status, total: order.total };
+    }
+    case 'get_woo_customers': {
+      const params = new URLSearchParams({ per_page: args.per_page || 10, role: args.role || 'customer' });
+      if (args.search) params.set('search', args.search);
+      const customers = await wc('GET', `/customers?${params}`);
+      return customers.map(c => ({ id: c.id, name: `${c.first_name} ${c.last_name}`.trim(), email: c.email, orders_count: c.orders_count, total_spent: c.total_spent }));
     }
     default:
       throw new Error(`Unknown tool: ${name}`);
