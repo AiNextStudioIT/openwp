@@ -471,15 +471,15 @@ async function callTool(name, args) {
       return { plugin: plugin.plugin, name: plugin.name, status: plugin.status, version: plugin.version };
     }
     case 'activate_plugin': {
-      const plugin = await wp('POST', `/plugins/${encodeURIComponent(args.plugin)}`, { status: 'active' });
+      const plugin = await wp('PUT', `/plugins/${encodeURIComponent(args.plugin)}`, { status: 'active' });
       return { plugin: plugin.plugin, name: plugin.name, status: plugin.status };
     }
     case 'deactivate_plugin': {
-      const plugin = await wp('POST', `/plugins/${encodeURIComponent(args.plugin)}`, { status: 'inactive' });
+      const plugin = await wp('PUT', `/plugins/${encodeURIComponent(args.plugin)}`, { status: 'inactive' });
       return { plugin: plugin.plugin, name: plugin.name, status: plugin.status };
     }
     case 'delete_plugin': {
-      await wp('DELETE', `/plugins/${encodeURIComponent(args.plugin)}`);
+      await wp('DELETE', `/plugins/${encodeURIComponent(args.plugin)}?force=true`);
       return { deleted: true, plugin: args.plugin };
     }
     case 'install_theme': {
@@ -488,7 +488,7 @@ async function callTool(name, args) {
       return { stylesheet: theme.stylesheet, name: theme.name?.rendered, status: theme.status, version: theme.version };
     }
     case 'activate_theme': {
-      const theme = await wp('POST', `/themes/${encodeURIComponent(args.stylesheet)}`, { status: 'active' });
+      const theme = await wp('PUT', `/themes/${encodeURIComponent(args.stylesheet)}`, { status: 'active' });
       return { stylesheet: theme.stylesheet, name: theme.name?.rendered, status: theme.status };
     }
     case 'get_site_info': {
