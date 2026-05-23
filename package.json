@@ -1,0 +1,21 @@
+{
+  "name": "openwp",
+  "version": "1.0.0",
+  "description": "MCP server that gives AI agents full control over WordPress via REST API — no plugin required",
+  "main": "index.js",
+  "bin": {
+    "openwp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["mcp", "wordpress", "ai", "claude", "cursor", "windsurf", "rest-api"],
+  "author": "AI Next Studio",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
