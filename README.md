@@ -226,6 +226,12 @@ Once connected, just use natural language:
 
 ---
 
+## Learn more
+
+- [What is MCP (Model Context Protocol) and how it works](https://raffaelemele.it/mcp-model-context-protocol-cose-come-funziona/) (in Italian)
+- [AI agents: what they are and how they work](https://raffaelemele.it/agenti-ai-cosa-sono-come-funzionano/) (in Italian)
+- [Elementor MCP: what it is and how it works](https://servizi-wp.it/elementor-mcp) (in Italian)
+
 ## License
 
 MIT — free forever.
