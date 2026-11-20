@@ -126,7 +126,7 @@ Once connected, just use natural language:
 
 ---
 
-## Available Tools (42 total)
+## Available Tools (47 total)
 
 ### Content
 
@@ -207,6 +207,19 @@ Once connected, just use natural language:
 | `get_woo_orders` | List orders (filter by status, customer, date) |
 | `update_woo_order` | Update order status or add customer note |
 | `get_woo_customers` | List customers |
+
+### Skills, stack detection and memory
+
+| Tool | What it does |
+|---|---|
+| `detect_stack` | Looks at the active plugins and theme and returns the matching skills |
+| `get_skill` | Reads a skill: how to work with one builder, theme or plugin (data location, what works today, rules). Without a name it lists all skills |
+| `get_content_raw` | Reads the raw content of a post or page (block markup, shortcodes) before editing it |
+| `memory_write` / `memory_read` / `memory_search` / `memory_delete` | Notes about the site that survive between sessions. Stored on your computer in `~/.openwp/memory` |
+
+Skills are Markdown files in the `skills/` folder, one per product, marked `verified` or `unverified`. Adding one is a pull request. Today: Gutenberg, Divi, Elementor, Bricks, WooCommerce, Yoast SEO, Rank Math.
+
+Sites with plain permalinks (no `/wp-json/`) work too: OpenWP falls back to `?rest_route=` by itself.
 
 ---
 

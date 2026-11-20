@@ -2,6 +2,7 @@
 import { Server } from '@modelcontextprotocol/sdk/server/index.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
+import { EXTRA_TOOLS, isExtraTool, callExtraTool } from './lib/tools-skills.js';
 
 const WP_URL = (process.env.WP_URL || '').replace(/\/$/, '');
 const WP_USERNAME = process.env.WP_USERNAME || '';
@@ -17,8 +18,23 @@ if (!WP_URL || !WP_USERNAME || !WP_APP_PASSWORD) {
 }
 
 const auth = Buffer.from(`${WP_USERNAME}:${WP_APP_PASSWORD}`).toString('base64');
-const API = `${WP_URL}/wp-json/wp/v2`;
-const WC_API = `${WP_URL}/wp-json/wc/v3`;
+// Sites with "plain" permalinks do not answer on /wp-json/: the same API is reached with ?rest_route=.
+// The first request checks which one works.
+let restPretty = null;
+
+async function restUrl(namespace, endpoint) {
+  if (restPretty === null) {
+    try {
+      const probe = await fetch(`${WP_URL}/wp-json/`);
+      restPretty = (probe.headers.get('content-type') || '').includes('json');
+    } catch {
+      restPretty = true;
+    }
+  }
+  if (restPretty) return `${WP_URL}/wp-json/${namespace}${endpoint}`;
+  const [path, query] = endpoint.split('?');
+  return `${WP_URL}/?rest_route=/${namespace}${path}${query ? '&' + query : ''}`;
+}
 
 async function wp(method, endpoint, body) {
   const opts = {
@@ -26,7 +42,7 @@ async function wp(method, endpoint, body) {
     headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
   };
   if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(`${API}${endpoint}`, opts);
+  const res = await fetch(await restUrl('wp/v2', endpoint), opts);
   const text = await res.text();
   if (!res.ok) throw new Error(`WP API ${res.status}: ${text}`);
   return text ? JSON.parse(text) : {};
@@ -38,7 +54,7 @@ async function wc(method, endpoint, body) {
     headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
   };
   if (body) opts.body = JSON.stringify(body);
-  const res = await fetch(`${WC_API}${endpoint}`, opts);
+  const res = await fetch(await restUrl('wc/v3', endpoint), opts);
   const text = await res.text();
   if (!res.ok) throw new Error(`WC API ${res.status}: ${text}`);
   return text ? JSON.parse(text) : {};
@@ -580,6 +596,7 @@ async function resolvePlugin(input) {
 }
 
 async function callTool(name, args) {
+  if (isExtraTool(name)) return callExtraTool(name, args, { wp, siteUrl: WP_URL });
   switch (name) {
     case 'get_posts': {
       const params = new URLSearchParams({ per_page: args.per_page || 10, page: args.page || 1, status: args.status || 'publish' });
@@ -740,7 +757,7 @@ async function callTool(name, args) {
       const contentType = fileRes.headers.get('content-type') || 'application/octet-stream';
       const filename = args.url.split('/').pop().split('?')[0] || 'upload';
       const buffer = await fileRes.arrayBuffer();
-      const uploadRes = await fetch(`${API}/media`, {
+      const uploadRes = await fetch(await restUrl('wp/v2', '/media'), {
         method: 'POST',
         headers: {
           'Authorization': `Basic ${auth}`,
@@ -822,7 +839,7 @@ const server = new Server(
   { capabilities: { tools: {} } }
 );
 
-server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: TOOLS }));
+server.setRequestHandler(ListToolsRequestSchema, async () => ({ tools: [...TOOLS, ...EXTRA_TOOLS] }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
