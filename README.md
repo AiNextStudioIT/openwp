@@ -4,7 +4,9 @@
 
 OpenWP connects Claude, Cursor, Windsurf and any AI that speaks MCP to your WordPress site. You say "publish a post", "lower the price of that product" or "rewrite the top of this page", and it happens. Your AI talks straight to your site: nothing goes through our servers.
 
-**Website:** [openwpmcp.com](https://openwpmcp.com)
+**Website:** [openwpmcp.com](https://openwpmcp.com) · **Docs:** [openwpmcp.com/docs](https://openwpmcp.com/docs)
+
+> **Beta.** OpenWP is new and we are still improving it. It works on Elementor, Bricks and Gutenberg sites and with Claude Desktop, Claude Code, Codex and zcode. Found a problem? [Open an issue](https://github.com/AiNextStudioIT/openwp/issues). Developer mode is for test sites only.
 
 ---
 

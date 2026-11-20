@@ -9,7 +9,8 @@ extract( $ctx ); // phpcs:ignore WordPress.PHP.DontExtract
 ?>
 <div class="owp owp-app" data-url="<?php echo esc_attr( $mcp_url ); ?>">
 	<aside class="owp-side">
-		<div class="owp-brand"><span class="owp-logo">O</span><div><b>OpenWP</b><small>v<?php echo esc_html( OPENWP_BRIDGE_VERSION ); ?></small></div></div>
+		<div class="owp-brand"><span class="owp-logo">O</span><div><b>OpenWP <em class="owp-beta">Beta</em></b><small>v<?php echo esc_html( OPENWP_BRIDGE_VERSION ); ?></small></div>
+			<a class="owp-docs" href="https://openwpmcp.com/docs" target="_blank" rel="noopener" title="Documentation: how OpenWP works" aria-label="Documentation"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M9 7h7M9 11h5"/></svg></a></div>
 		<nav>
 			<?php foreach ( $tabs as $key => $t ) : ?>
 				<a href="<?php echo esc_url( OpenWP_Settings::url( $key ) ); ?>" class="<?php echo $key === $tab ? 'on' : ''; ?>">

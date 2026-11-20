@@ -115,3 +115,8 @@
 
 .owp-copy-box .owp-pill{background:rgba(100,116,139,.18);color:inherit}
 .owp-copy-box .owp-pill.on{background:#16a34a;color:#fff}
+
+.owp-brand{position:relative}
+.owp-beta{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:#f59e0b;color:#fff;padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.owp-docs{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;color:#4f46e5;background:rgba(79,70,229,.1);text-decoration:none}
+.owp-docs:hover{background:rgba(79,70,229,.2)}
