@@ -96,7 +96,7 @@ class OpenWP_Mcp {
 					return ! in_array( $t->name, OpenWP_Abilities::hidden_ours(), true );
 				} ) );
 
-				return self::result( $id, array( 'tools' => array_merge( $ours, OpenWP_Abilities::tools(), array_slice( OpenWP_Mcp_Tools::meta_tools(), 1, 1 ) ) ) );
+				return self::result( $id, array( 'tools' => array_merge( $ours, OpenWP_Abilities::tools(), array_slice( OpenWP_Mcp_Tools::meta_tools(), 1, 1 ), OpenWP_Mcp_Tools::adapter_tools() ) ) );
 
 			case 'tools/call':
 				$name = isset( $params['name'] ) ? (string) $params['name'] : '';

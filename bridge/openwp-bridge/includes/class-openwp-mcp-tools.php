@@ -46,6 +46,11 @@ class OpenWP_Mcp_Tools {
 		);
 	}
 
+	/** Tools of our plugins (one module per product), only for the ones that are active. */
+	public static function adapter_tools() {
+		return OpenWP_Fluxtore::active() ? OpenWP_Fluxtore::tools() : array();
+	}
+
 	/** The compact list: LITE tools plus the two meta tools. */
 	public static function lite_definitions() {
 		$out = array();
@@ -56,7 +61,7 @@ class OpenWP_Mcp_Tools {
 			}
 		}
 
-		return array_merge( $out, self::meta_tools() );
+		return array_merge( $out, self::meta_tools(), self::adapter_tools() );
 	}
 
 	/** Tool definitions (names, descriptions, input schemas), generated from the OpenWP server by bridge/build.sh. */
@@ -106,6 +111,10 @@ class OpenWP_Mcp_Tools {
 	}
 
 	public static function has( $name ) {
+		if ( OpenWP_Fluxtore::has( $name ) ) {
+			return true;
+		}
+
 		if ( in_array( $name, array( 'list_abilities', 'run_ability', 'our_plugins' ), true ) ) {
 			return true;
 		}
@@ -123,6 +132,10 @@ class OpenWP_Mcp_Tools {
 	public static function call( $name, array $args ) {
 		if ( OpenWP_Abilities::is_ability_tool( $name ) ) {
 			return OpenWP_Abilities::call( $name, $args );
+		}
+
+		if ( OpenWP_Fluxtore::has( $name ) ) {
+			return OpenWP_Fluxtore::call( $name, $args );
 		}
 
 		$refused = OpenWP_Abilities::refuse_ours( $name, $args );
