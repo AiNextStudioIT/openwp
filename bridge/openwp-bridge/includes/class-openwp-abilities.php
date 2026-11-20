@@ -96,12 +96,7 @@ class OpenWP_Abilities {
 				continue;
 			}
 
-			$schema = $ab->get_input_schema();
-			$schema = is_array( $schema ) && $schema ? $schema : array( 'type' => 'object' );
-
-			if ( empty( $schema['properties'] ) ) {
-				$schema['properties'] = new stdClass();
-			}
+			$schema = self::flat_schema( $ab->get_input_schema() );
 
 			$tools[] = (object) array(
 				'name'        => self::PREFIX . str_replace( '/', '__', $name ),
@@ -111,6 +106,60 @@ class OpenWP_Abilities {
 		}
 
 		return $tools;
+	}
+
+	/**
+	 * Many AI services (Anthropic, z.ai...) refuse a tool whose input schema has oneOf, anyOf, allOf or not at the top level.
+	 * We flatten them: the properties of all the branches are merged, and only what every branch asks for stays required.
+	 */
+	public static function flat_schema( $schema ) {
+		$schema = is_array( $schema ) && $schema ? $schema : array( 'type' => 'object' );
+		$props  = isset( $schema['properties'] ) && is_array( $schema['properties'] ) ? $schema['properties'] : array();
+		$req    = isset( $schema['required'] ) && is_array( $schema['required'] ) ? $schema['required'] : array();
+		$note   = array();
+
+		foreach ( array( 'oneOf', 'anyOf' ) as $key ) {
+			if ( empty( $schema[ $key ] ) || ! is_array( $schema[ $key ] ) ) {
+				continue;
+			}
+
+			$common = null;
+
+			foreach ( $schema[ $key ] as $branch ) {
+				if ( ! is_array( $branch ) ) {
+					continue;
+				}
+
+				$props  = array_merge( isset( $branch['properties'] ) && is_array( $branch['properties'] ) ? $branch['properties'] : array(), $props );
+				$r      = isset( $branch['required'] ) && is_array( $branch['required'] ) ? $branch['required'] : array();
+				$common = null === $common ? $r : array_values( array_intersect( $common, $r ) );
+			}
+
+			$req    = array_values( array_unique( array_merge( $req, (array) $common ) ) );
+			$note[] = 'one of several shapes: send the fields that fit';
+		}
+
+		if ( ! empty( $schema['allOf'] ) && is_array( $schema['allOf'] ) ) {
+			foreach ( $schema['allOf'] as $branch ) {
+				if ( is_array( $branch ) ) {
+					$props = array_merge( $props, isset( $branch['properties'] ) && is_array( $branch['properties'] ) ? $branch['properties'] : array() );
+					$req   = array_values( array_unique( array_merge( $req, isset( $branch['required'] ) && is_array( $branch['required'] ) ? $branch['required'] : array() ) ) );
+				}
+			}
+		}
+
+		unset( $schema['oneOf'], $schema['anyOf'], $schema['allOf'], $schema['not'], $schema['enum'], $schema['required'] );
+
+		$schema['type']       = 'object';
+		$schema['properties'] = $props ? $props : new stdClass();
+
+		if ( $req ) {
+			$schema['required'] = array_values( array_filter( $req, function ( $k ) use ( $props ) {
+				return isset( $props[ $k ] );
+			} ) );
+		}
+
+		return $schema;
 	}
 
 	public static function is_ability_tool( $tool ) {
