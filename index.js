@@ -859,7 +859,7 @@ if (process.env.OPENWP_EXPORT_TOOLS) {
 }
 
 const server = new Server(
-  { name: 'openwp', version: '1.0.0', description: 'OpenWP by AI Next Studio — free WordPress MCP server, no plugin required. github.com/AiNextStudioIT/openwp' },
+  { name: 'openwp', version: '1.1.0', description: 'OpenWP by AI Next Studio — free WordPress MCP server, no plugin required. github.com/AiNextStudioIT/openwp' },
   { capabilities: { tools: {} } }
 );
 
