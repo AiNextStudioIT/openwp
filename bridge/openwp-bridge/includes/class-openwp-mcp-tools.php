@@ -8,6 +8,52 @@ defined( 'ABSPATH' ) || exit;
 
 class OpenWP_Mcp_Tools {
 
+	/** Compact profile: the essential tools, for AI services that refuse a long tool list (GLM/z.ai stops at about 128 in total). */
+	const LITE = array(
+		'detect_stack', 'get_skill', 'get_content_raw', 'memory_write', 'memory_read', 'memory_search',
+		'get_posts', 'get_post', 'create_post', 'update_post', 'get_pages', 'create_page', 'update_page', 'search_content', 'get_media',
+		'get_plugins', 'activate_plugin', 'deactivate_plugin', 'get_site_info',
+		'get_builder_data', 'set_builder_data', 'list_builder_backups', 'restore_builder_backup', 'set_page_meta', 'bridge_status',
+		'get_woo_products', 'create_woo_product', 'update_woo_product', 'get_woo_orders',
+		'dev_run_php', 'dev_files',
+	);
+
+	/** Two tools that reach every ability of the other plugins without listing them one by one. */
+	public static function meta_tools() {
+		return array(
+			(object) array(
+				'name'        => 'list_abilities',
+				'description' => 'List the tools that the other plugins of this site publish for AI (WooCommerce, SEO plugins, forms...). Returns name, description and input fields. Run one with run_ability.',
+				'inputSchema' => (object) array( 'type' => 'object', 'properties' => new stdClass() ),
+			),
+			(object) array(
+				'name'        => 'run_ability',
+				'description' => 'Run one ability of another plugin. Use the name from list_abilities, for example "woocommerce/products-query", and the fields it asks for in "input".',
+				'inputSchema' => (object) array(
+					'type'       => 'object',
+					'properties' => (object) array(
+						'name'  => (object) array( 'type' => 'string', 'description' => 'Ability name, for example woocommerce/products-query' ),
+						'input' => (object) array( 'type' => 'object', 'description' => 'The fields the ability asks for', 'additionalProperties' => true ),
+					),
+					'required'   => array( 'name' ),
+				),
+			),
+		);
+	}
+
+	/** The compact list: LITE tools plus the two meta tools. */
+	public static function lite_definitions() {
+		$out = array();
+
+		foreach ( self::definitions() as $d ) {
+			if ( in_array( $d->name, self::LITE, true ) ) {
+				$out[] = $d;
+			}
+		}
+
+		return array_merge( $out, self::meta_tools() );
+	}
+
 	/** Tool definitions (names, descriptions, input schemas), generated from the OpenWP server by bridge/build.sh. */
 	public static function definitions() {
 		$file = OPENWP_BRIDGE_DIR . 'mcp-tools.json';
@@ -55,6 +101,10 @@ class OpenWP_Mcp_Tools {
 	}
 
 	public static function has( $name ) {
+		if ( in_array( $name, array( 'list_abilities', 'run_ability' ), true ) ) {
+			return true;
+		}
+
 		foreach ( self::definitions() as $d ) {
 			if ( $d->name === $name ) {
 				return true;
@@ -83,6 +133,18 @@ class OpenWP_Mcp_Tools {
 		}
 
 		switch ( $name ) {
+			case 'list_abilities':
+				$out = array();
+
+				foreach ( OpenWP_Abilities::all_for_listing() as $row ) {
+					$out[] = $row;
+				}
+
+				return $out;
+			case 'run_ability':
+				$ab = isset( $args['name'] ) ? (string) $args['name'] : '';
+
+				return OpenWP_Abilities::call( OpenWP_Abilities::PREFIX . str_replace( '/', '__', $ab ), isset( $args['input'] ) && is_array( $args['input'] ) ? $args['input'] : array() );
 			case 'delete_post':
 				return self::rest( 'DELETE', '/wp/v2/posts/' . (int) $args['id'], array( 'force' => ! empty( $args['force'] ) ), array(), '' );
 			case 'delete_comment':

@@ -10,6 +10,9 @@ class OpenWP_Mcp {
 
 	const PROTOCOLS = array( '2025-06-18', '2025-03-26', '2024-11-05' );
 
+	/** 'lite' = the compact tool list. Set from ?profile=lite of the address. */
+	private static $profile = '';
+
 	public static function init() {
 		add_filter( 'rest_pre_serve_request', array( __CLASS__, 'serve_empty' ), 10, 3 );
 	}
@@ -31,6 +34,8 @@ class OpenWP_Mcp {
 		if ( null === $body || ( ! is_array( $body ) ) ) {
 			return self::error( null, -32700, 'Parse error' );
 		}
+
+		self::$profile = sanitize_key( (string) $request->get_param( 'profile' ) );
 
 		OpenWP_Presence::touch( 'MCP ' . mb_substr( (string) $request->get_header( 'user_agent' ), 0, 40 ), '/openwp/v1/mcp' );
 
@@ -83,6 +88,10 @@ class OpenWP_Mcp {
 				return self::result( $id, (object) array() );
 
 			case 'tools/list':
+				if ( 'lite' === self::$profile ) {
+					return self::result( $id, array( 'tools' => OpenWP_Mcp_Tools::lite_definitions() ) );
+				}
+
 				$ours = array_values( array_filter( OpenWP_Mcp_Tools::definitions(), function ( $t ) {
 					return ! in_array( $t->name, OpenWP_Abilities::hidden_ours(), true );
 				} ) );

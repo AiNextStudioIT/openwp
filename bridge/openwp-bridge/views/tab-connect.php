@@ -21,6 +21,7 @@ defined( 'ABSPATH' ) || exit;
 		</div></div>
 		<div class="owp-step"><div class="owp-num">3</div><div style="min-width:0;flex:1">
 			<h3>Copy the command for your AI</h3>
+			<p class="owp-note" style="margin:0 0 4px"><label><input type="checkbox" id="owp-lite"> <strong>Compact tool list</strong> (33 tools instead of <?php echo (int) ( count( OpenWP_Mcp_Tools::definitions() ) + count( OpenWP_Abilities::tools() ) ); ?>). Turn it on if your AI says it has too many tools. The zcode tab uses it by itself.</label></p>
 			<div class="owp-tabs">
 				<button type="button" class="owp-tab on" data-pane="owp-p1">Claude Code</button>
 				<button type="button" class="owp-tab" data-pane="owp-p4">Codex</button>

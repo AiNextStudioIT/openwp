@@ -162,6 +162,34 @@ class OpenWP_Abilities {
 		return $schema;
 	}
 
+	/** Name, label, description and input fields of every ability, for the compact profile (list_abilities). */
+	public static function all_for_listing() {
+		$rows = array();
+
+		if ( ! self::supported() ) {
+			return $rows;
+		}
+
+		foreach ( wp_get_abilities() as $ab ) {
+			$name = $ab->get_name();
+
+			if ( 0 === strpos( $name, 'mcp-adapter/' ) ) {
+				continue;
+			}
+
+			$schema = self::flat_schema( $ab->get_input_schema() );
+			$rows[] = array(
+				'name'        => $name,
+				'label'       => $ab->get_label(),
+				'description' => $ab->get_description(),
+				'input'       => isset( $schema['properties'] ) ? $schema['properties'] : new stdClass(),
+				'required'    => isset( $schema['required'] ) ? $schema['required'] : array(),
+			);
+		}
+
+		return $rows;
+	}
+
 	public static function is_ability_tool( $tool ) {
 		return 0 === strpos( (string) $tool, self::PREFIX );
 	}
