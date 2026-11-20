@@ -13,7 +13,7 @@
 		var cc = 'claude mcp add --transport http openwp ' + url + ' --header "Authorization: Basic ' + b + '"';
 		var cur = JSON.stringify( { mcpServers: { openwp: { url: url, headers: { Authorization: 'Basic ' + b } } } }, null, 2 );
 		var gen = 'Address: ' + url + '\nHeader:  Authorization: Basic ' + b;
-		var cdx = "mkdir -p ~/.codex && cat >> ~/.codex/config.toml <<'EOF'\n\n[mcp_servers.openwp]\nurl = \"" + url + "\"\nhttp_headers = { \"Authorization\" = \"Basic " + b + "\" }\nEOF";
+		var cdx = "mkdir -p ~/.codex && touch ~/.codex/config.toml && cp ~/.codex/config.toml ~/.codex/config.toml.bak && awk '/^\\[mcp_servers\\.openwp(\\]|\\.)/{s=1;next} /^\\[/{s=0} !s' ~/.codex/config.toml.bak > ~/.codex/config.toml && cat >> ~/.codex/config.toml <<'EOF'\n\n[mcp_servers.openwp]\nurl = \"" + url + "\"\nhttp_headers = { \"Authorization\" = \"Basic " + b + "\" }\nEOF";
 		document.getElementById( 'owp-cdx' ).textContent = cdx;
 		document.getElementById( 'owp-cc' ).textContent = cc;
 		document.getElementById( 'owp-cur' ).textContent = cur;
