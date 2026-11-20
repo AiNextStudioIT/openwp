@@ -33,3 +33,13 @@ Tested: edit a heading, see it on the page, restore. The bridge writes the JSON 
 - `_elementor_data` is a JSON string saved already escaped. Never rewrite it with generic meta functions that escape again: it corrupts the page. Change it as a decoded structure and save it as one string.
 - After a change, delete the caches (`_elementor_css`, `_elementor_element_cache`) so the page regenerates.
 - Keep every widget `id`, and keep `elType` and `widgetType` untouched when only rewriting text.
+
+## Checklist: a landing page done properly
+Before saying a landing is ready:
+1. **One H1 only**, with the main keyword. Other headings are H2/H3 (set the widget `header_size`). Check the theme does not add a second H1 for the page title (use a full-width or canvas template, or hide the theme title).
+2. **Title and meta description** set through the SEO plugin with `set_page_meta` (title up to 60 characters, description up to 155).
+3. **Every image has alt text, width and height**; use real images or the media library, never empty placeholders.
+4. **Mobile**: check at phone width. Text readable, buttons full width, nothing overlapping, columns stacked.
+5. **One clear button** repeated at the top, the middle and the end, all pointing to a real URL.
+6. Look at the **whole page**, not only the top, then report what was checked and what was not.
+7. Keep it a **draft** until the owner approves, unless they asked to publish.

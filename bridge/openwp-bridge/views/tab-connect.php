@@ -18,6 +18,10 @@ defined( 'ABSPATH' ) || exit;
 				<input type="text" id="owp-u" placeholder="user name" value="<?php echo esc_attr( wp_get_current_user()->user_login ); ?>" autocomplete="off">
 				<input type="text" id="owp-p" placeholder="xxxx xxxx xxxx xxxx xxxx xxxx" autocomplete="off">
 			</div>
+			<p style="margin:10px 0 4px"><strong>Connection name</strong> <span class="owp-muted">(one per site: if you connect several sites to the same AI, give each a different name)</span></p>
+			<div class="owp-fields">
+				<input type="text" id="owp-n" value="<?php echo esc_attr( 'openwp-' . trim( preg_replace( '/[^a-z0-9]+/', '-', strtolower( (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ), '-' ) ); ?>" autocomplete="off">
+			</div>
 		</div></div>
 		<div class="owp-step"><div class="owp-num">3</div><div style="min-width:0;flex:1">
 			<h3>Copy the command for your AI</h3>

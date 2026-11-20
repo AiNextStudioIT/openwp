@@ -3,7 +3,7 @@
 	var root = document.querySelector( '.owp' );
 	if ( ! root ) { return; }
 	var url = root.getAttribute( 'data-url' );
-	var u = document.getElementById( 'owp-u' ), p = document.getElementById( 'owp-p' );
+	var u = document.getElementById( 'owp-u' ), p = document.getElementById( 'owp-p' ), nameEl = document.getElementById( 'owp-n' );
 	if ( ! u || ! p ) { return; } // Only the Connect section has the command box.
 
 	function b64() { return btoa( u.value + ':' + p.value.replace( /\s+/g, ' ' ).trim() ); }
@@ -14,18 +14,19 @@
 		var b = b64();
 		var liteOn = document.getElementById( 'owp-lite' ) && document.getElementById( 'owp-lite' ).checked;
 		var u1 = withProfile( liteOn ), uz = withProfile( true );
-		var cc = 'claude mcp add --transport http openwp ' + u1 + ' --header "Authorization: Basic ' + b + '"';
-		var cur = JSON.stringify( { mcpServers: { openwp: { url: u1, headers: { Authorization: 'Basic ' + b } } } }, null, 2 );
+		var nm = ( nameEl && nameEl.value.replace( /[^A-Za-z0-9_-]+/g, '-' ).replace( /^-+|-+$/g, '' ) ) || 'openwp';
+		var cc = 'claude mcp add --transport http ' + nm + ' ' + u1 + ' --header "Authorization: Basic ' + b + '"';
+		var cur = JSON.stringify( { mcpServers: { [ nm ]: { url: u1, headers: { Authorization: 'Basic ' + b } } } }, null, 2 );
 		var gen = 'Address: ' + u1 + '\nHeader:  Authorization: Basic ' + b;
-		var cdx = "mkdir -p ~/.codex && touch ~/.codex/config.toml && cp ~/.codex/config.toml ~/.codex/config.toml.bak && awk '/^\\[mcp_servers\\.openwp(\\]|\\.)/{s=1;next} /^\\[/{s=0} !s' ~/.codex/config.toml.bak > ~/.codex/config.toml && cat >> ~/.codex/config.toml <<'EOF'\n\n[mcp_servers.openwp]\nurl = \"" + u1 + "\"\nhttp_headers = { \"Authorization\" = \"Basic " + b + "\" }\nEOF";
-		document.getElementById( 'owp-zc' ).textContent = '"openwp": ' + JSON.stringify( { type: 'http', url: uz, headers: { Authorization: 'Basic ' + b } }, null, 2 );
+		var cdx = "mkdir -p ~/.codex && touch ~/.codex/config.toml && cp ~/.codex/config.toml ~/.codex/config.toml.bak && awk '/^\\[mcp_servers\\." + nm + "(\\]|\\.)/{s=1;next} /^\\[/{s=0} !s' ~/.codex/config.toml.bak > ~/.codex/config.toml && cat >> ~/.codex/config.toml <<'EOF'\n\n[mcp_servers." + nm + "]\nurl = \"" + u1 + "\"\nhttp_headers = { \"Authorization\" = \"Basic " + b + "\" }\nEOF";
+		document.getElementById( 'owp-zc' ).textContent = '"' + nm + '": ' + JSON.stringify( { type: 'http', url: uz, headers: { Authorization: 'Basic ' + b } }, null, 2 );
 		document.getElementById( 'owp-cdx' ).textContent = cdx;
 		document.getElementById( 'owp-cc' ).textContent = cc;
 		document.getElementById( 'owp-cur' ).textContent = cur;
 		document.getElementById( 'owp-gen' ).textContent = gen;
 	}
 
-	[ u, p ].forEach( function ( el ) { el.addEventListener( 'input', draw ); } );
+	[ u, p, nameEl ].forEach( function ( el ) { if ( ! el ) { return; } el.addEventListener( 'input', draw ); } );
 	var liteBox = document.getElementById( 'owp-lite' );
 	if ( liteBox ) { liteBox.addEventListener( 'change', draw ); }
 	draw();
