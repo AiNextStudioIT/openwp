@@ -1,6 +1,11 @@
 #!/bin/bash
 # Builds bridge/openwp-bridge.zip (folders 755, files 644), ready to upload in WordPress.
-cd "$(dirname "$0")" || exit 1
+# It first copies the skills and generates the tool list from the OpenWP server, so the plugin and the server stay in step.
+set -e
+cd "$(dirname "$0")"
+ROOT="$(pwd)/.."
+rm -rf openwp-bridge/skills && cp -R "$ROOT/skills" openwp-bridge/skills
+(cd "$ROOT" && OPENWP_EXPORT_TOOLS=1 WP_URL=https://build.test WP_USERNAME=build WP_APP_PASSWORD=build node index.js) > openwp-bridge/mcp-tools.json
 rm -f openwp-bridge.zip
 python3 - <<'P'
 import zipfile, os

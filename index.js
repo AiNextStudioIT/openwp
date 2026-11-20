@@ -852,6 +852,12 @@ async function callTool(name, args) {
   }
 }
 
+// Used by bridge/build.sh to hand the tool list to the Bridge plugin (MCP over HTTP).
+if (process.env.OPENWP_EXPORT_TOOLS) {
+  process.stdout.write(JSON.stringify([...TOOLS, ...EXTRA_TOOLS]));
+  process.exit(0);
+}
+
 const server = new Server(
   { name: 'openwp', version: '1.0.0', description: 'OpenWP by AI Next Studio — free WordPress MCP server, no plugin required. github.com/AiNextStudioIT/openwp' },
   { capabilities: { tools: {} } }

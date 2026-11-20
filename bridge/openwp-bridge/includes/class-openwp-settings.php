@@ -80,6 +80,28 @@ class OpenWP_Settings {
 			<p>This small plugin is the optional companion of <strong>OpenWP</strong>, the free tool that lets an AI agent (Claude, Cursor...) work on your site. With the bridge, the agent can <strong>read and change the layout</strong> of pages built with Elementor, Bricks, Divi or the block editor, and fill the SEO fields of Yoast SEO and Rank Math. Before every change it saves a copy, so you can go back.</p>
 			<p>Version <?php echo esc_html( OPENWP_BRIDGE_VERSION ); ?>. Nothing is sent to any server: the agent talks directly to your site with a WordPress Application Password.</p>
 
+			<h2>Connect your AI (nothing to install on your computer)</h2>
+			<p>1. In <a href="<?php echo esc_url( admin_url( 'profile.php#application-passwords-section' ) ); ?>">your profile</a> create an <strong>Application Password</strong> (name it &#8220;OpenWP&#8221;) and copy it.<br>
+				2. Type your user name and that password here. They stay in this page, in your browser: nothing is sent or saved.</p>
+			<p>
+				<input type="text" id="openwp-u" placeholder="user name" value="<?php echo esc_attr( wp_get_current_user()->user_login ); ?>" style="width:180px">
+				<input type="text" id="openwp-p" placeholder="xxxx xxxx xxxx xxxx xxxx xxxx" style="width:300px" autocomplete="off">
+			</p>
+			<p>3. Paste this command in a terminal (Claude Code):</p>
+			<textarea id="openwp-cmd" readonly rows="3" style="width:100%;max-width:900px;font-family:monospace"></textarea>
+			<p>For <strong>Cursor</strong> and other clients: use this address <code><?php echo esc_html( rest_url( 'openwp/v1/mcp' ) ); ?></code> and add the header <code>Authorization: Basic &lt;the base64 of user:password&gt;</code> (the box above builds it). Claude Desktop: not confirmed, use the OpenWP program from the README.</p>
+			<script>
+			( function () {
+				var u = document.getElementById( 'openwp-u' ), p = document.getElementById( 'openwp-p' ), c = document.getElementById( 'openwp-cmd' );
+				var url = <?php echo wp_json_encode( rest_url( 'openwp/v1/mcp' ) ); ?>;
+				function draw() {
+					var b = btoa( u.value + ':' + p.value.replace( /\s+/g, ' ' ).trim() );
+					c.value = 'claude mcp add --transport http openwp ' + url + ' --header "Authorization: Basic ' + b + '"';
+				}
+				u.addEventListener( 'input', draw ); p.addEventListener( 'input', draw ); draw();
+			}() );
+			</script>
+
 			<h2>Developer mode</h2>
 			<p>It lets the agent run PHP code, read the database and read and write files in <code>wp-content</code>. It is powerful and it can break a site: <strong>use it only on a test or staging site</strong>, never on a shop with real customers. It is <strong>off</strong> unless you turn it on, it turns itself off when the time ends, and every call is written in the log below.</p>
 

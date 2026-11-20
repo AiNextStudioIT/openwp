@@ -27,10 +27,17 @@ class OpenWP_Presence {
 			return $result;
 		}
 
+		self::touch( $ua, $request->get_route() );
+
+		return $result;
+	}
+
+	/** Remembers that a client was just here (at most one write every 20 seconds). */
+	public static function touch( $client, $route ) {
 		$last = get_option( self::OPTION, array() );
 
 		if ( is_array( $last ) && ! empty( $last['time'] ) && time() - (int) $last['time'] < self::THROTTLE && (int) $last['user'] === get_current_user_id() ) {
-			return $result;
+			return;
 		}
 
 		update_option(
@@ -38,13 +45,11 @@ class OpenWP_Presence {
 			array(
 				'time'   => time(),
 				'user'   => get_current_user_id(),
-				'client' => mb_substr( $ua, 0, 60 ),
-				'route'  => mb_substr( $request->get_route(), 0, 80 ),
+				'client' => mb_substr( (string) $client, 0, 60 ),
+				'route'  => mb_substr( (string) $route, 0, 80 ),
 			),
 			false
 		);
-
-		return $result;
 	}
 
 	public static function last() {

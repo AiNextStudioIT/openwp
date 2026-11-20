@@ -37,6 +37,9 @@ class OpenWP_Rest {
 			register_rest_route( self::NS, '/dev/' . $what, array( 'methods' => 'POST', 'callback' => array( __CLASS__, 'dev_' . $what ), 'permission_callback' => array( __CLASS__, 'can_dev' ) ) );
 		}
 
+		// MCP over HTTP: the AI client connects straight to this address.
+		register_rest_route( self::NS, '/mcp', array( 'methods' => 'POST', 'callback' => array( 'OpenWP_Mcp', 'handle' ), 'permission_callback' => array( __CLASS__, 'can_use' ) ) );
+
 		register_rest_route( self::NS, '/log', array( 'methods' => 'GET', 'callback' => array( __CLASS__, 'log' ), 'permission_callback' => array( __CLASS__, 'can_manage' ) ) );
 	}
 
