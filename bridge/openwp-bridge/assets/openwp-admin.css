@@ -1,0 +1,70 @@
+/* OpenWP Bridge admin page. Everything is scoped under .owp so it never touches the rest of the admin. */
+.owp{--b:#4361ee;--b2:#3451d1;--ink:#14142b;--mut:#5d6486;--line:#e6e9f5;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;max-width:1040px;margin:22px 20px 40px 2px;color:var(--ink);font-size:14px;line-height:1.55}
+.owp *{box-sizing:border-box}
+.owp a{color:var(--b)}
+.owp-hero{position:relative;overflow:hidden;border-radius:22px;padding:30px 34px;color:#fff;background:linear-gradient(135deg,#4361ee 0%,#6a4cff 55%,#8a5cff 100%);box-shadow:0 18px 40px rgba(67,97,238,.28)}
+.owp-hero:before,.owp-hero:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.10)}
+.owp-hero:before{width:340px;height:340px;right:-90px;top:-150px}
+.owp-hero:after{width:220px;height:220px;right:150px;bottom:-130px}
+.owp-top{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.owp-logo{width:46px;height:46px;border-radius:13px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:22px;backdrop-filter:blur(4px)}
+.owp-title{font-size:26px;font-weight:800;letter-spacing:-.4px;margin:0;color:#fff}
+.owp-pill{background:rgba(255,255,255,.2);padding:3px 11px;border-radius:20px;font-size:12px;font-weight:700;margin-left:6px}
+.owp-sub{position:relative;z-index:1;margin:14px 0 0;max-width:640px;font-size:15px;opacity:.95}
+.owp-status{position:relative;z-index:1;display:inline-flex;align-items:center;gap:10px;margin-top:20px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.28);padding:10px 16px;border-radius:40px;font-weight:700;backdrop-filter:blur(6px)}
+.owp-dot{width:12px;height:12px;border-radius:50%;background:#cbd0e8;flex:none}
+.owp-dot.on{background:#4ade80;box-shadow:0 0 0 0 rgba(74,222,128,.7);animation:owp-pulse 1.8s infinite}
+@keyframes owp-pulse{70%{box-shadow:0 0 0 12px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.owp-status small{font-weight:500;opacity:.9}
+.owp-grid{display:grid;grid-template-columns:1fr;gap:18px;margin-top:18px}
+.owp-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 26px;box-shadow:0 4px 16px rgba(30,40,100,.05)}
+.owp-card h2{margin:0 0 4px;font-size:18px;font-weight:800;letter-spacing:-.2px;color:var(--ink);padding:0}
+.owp-card>p.lead{margin:0 0 16px;color:var(--mut)}
+.owp-flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 18px}
+.owp-node{padding:8px 14px;border-radius:12px;background:#f1f3fd;font-weight:700;font-size:13px}
+.owp-node.me{background:var(--b);color:#fff}
+.owp-arrow{color:#9aa3cc;font-weight:700}
+.owp-steps{display:grid;gap:16px}
+.owp-step{display:flex;gap:14px}
+.owp-num{flex:none;width:30px;height:30px;border-radius:50%;background:#eef1ff;color:var(--b);font-weight:800;display:flex;align-items:center;justify-content:center}
+.owp-step h3{margin:2px 0 4px;font-size:14.5px;font-weight:800;color:var(--ink)}
+.owp-step p{margin:0;color:var(--mut)}
+.owp-fields{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.owp-fields input{height:42px;border-radius:11px;border:1px solid var(--line);padding:0 13px;font-size:14px;background:#fafbff;min-width:190px}
+.owp-fields input:focus{outline:2px solid var(--b);border-color:var(--b);background:#fff}
+.owp-tabs{display:flex;gap:6px;margin:14px 0 0;border-bottom:1px solid var(--line)}
+.owp-tab{background:none;border:0;padding:9px 14px;font-weight:700;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-1px;font-size:13.5px}
+.owp-tab.on{color:var(--b);border-bottom-color:var(--b)}
+.owp-pane{display:none;padding-top:14px}.owp-pane.on{display:block}
+.owp-code{position:relative;background:#0f1230;color:#dfe5ff;border-radius:13px;padding:16px 92px 16px 16px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;line-height:1.6;word-break:break-all;white-space:pre-wrap;margin:0}
+.owp-copy{position:absolute;right:10px;top:10px;border:0;border-radius:9px;background:var(--b);color:#fff;font-weight:700;font-size:12.5px;padding:7px 13px;cursor:pointer}
+.owp-copy:hover{background:var(--b2)}.owp-copy.done{background:var(--ok)}
+.owp-note{margin:10px 0 0;color:var(--mut);font-size:13px}
+.owp-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+.owp-tile{border:1px solid var(--line);border-radius:14px;padding:15px 16px;background:linear-gradient(180deg,#fff,#f9faff)}
+.owp-tile b{display:block;font-size:14px;margin-bottom:3px}
+.owp-tile span{color:var(--mut);font-size:13px}
+.owp-chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
+.owp-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:20px;font-size:12.5px;font-weight:700;background:#eef1ff;color:var(--b)}
+.owp-chip.off{background:#f3f4f8;color:#8c93b3;font-weight:600}
+.owp-chip i{width:7px;height:7px;border-radius:50%;background:currentColor;display:block}
+.owp-dev{border-radius:18px;padding:24px 26px;border:1px solid var(--line);background:#fff;box-shadow:0 4px 16px rgba(30,40,100,.05)}
+.owp-dev.on{background:linear-gradient(135deg,#fff7ed,#fffbeb);border-color:#f5c27a}
+.owp-devrow{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.owp-dev h2{margin:0 0 4px;font-size:18px;font-weight:800;padding:0;color:var(--ink)}
+.owp-dev p{margin:0;color:var(--mut)}
+.owp-sw{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.owp-sw select{height:42px;border-radius:11px;border:1px solid var(--line);padding:0 12px}
+.owp-btn{height:42px;border-radius:11px;border:0;padding:0 20px;font-weight:800;font-size:14px;cursor:pointer;background:var(--b);color:#fff}
+.owp-btn:hover{background:var(--b2)}
+.owp-btn.stop{background:var(--bad)}.owp-btn.stop:hover{background:#b91c1c}
+.owp-badge{display:inline-flex;align-items:center;gap:8px;font-weight:800;padding:6px 14px;border-radius:30px;background:#f3f4f8;color:#6b7194}
+.owp-badge.on{background:#fde7c4;color:#9a5300}
+.owp-warn{margin-top:14px;padding:11px 14px;border-radius:12px;background:#fffbeb;border:1px solid #f9e4b0;color:#7a5200;font-size:13px}
+.owp-log{list-style:none;margin:0;padding:0}
+.owp-log li{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.owp-log li:last-child{border:0}
+.owp-ico{flex:none;width:34px;height:34px;border-radius:10px;background:#eef1ff;display:flex;align-items:center;justify-content:center;font-size:16px}
+.owp-log b{display:block;font-size:13.5px}.owp-log small{color:var(--mut)}
+.owp-empty{padding:26px 0;text-align:center;color:var(--mut)}
+@media(max-width:782px){.owp{margin:14px 10px}.owp-hero{padding:24px 20px}.owp-code{padding-right:16px;padding-bottom:52px}.owp-copy{top:auto;bottom:10px}}
