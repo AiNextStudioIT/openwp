@@ -2,8 +2,8 @@
 /** List of log rows. Variable: $rows. */
 defined( 'ABSPATH' ) || exit;
 
-$icons  = array( 'write_builder' => 'layout', 'write_meta' => 'search', 'ability' => 'plug', 'dev_php' => 'bolt', 'dev_sql' => 'database', 'dev_file_read' => 'file', 'dev_file_write' => 'file-edit', 'dev_file_list' => 'folder', 'dev_mode_on' => 'power', 'dev_mode_off' => 'power', 'prefer_saved' => 'gear' );
-$labels = array( 'write_builder' => 'Changed the layout of a page', 'write_meta' => 'Updated SEO fields', 'ability' => 'Used a tool of a plugin', 'dev_php' => 'Ran PHP code', 'dev_sql' => 'Read the database', 'dev_file_read' => 'Read a file', 'dev_file_write' => 'Wrote a file', 'dev_file_list' => 'Listed a folder', 'dev_mode_on' => 'Developer mode turned ON', 'dev_mode_off' => 'Developer mode turned OFF', 'prefer_saved' => 'Plugin tools choice saved' );
+$icons  = array( 'write_builder' => 'layout', 'write_meta' => 'search', 'ability' => 'plug', 'dev_php' => 'bolt', 'dev_sql' => 'database', 'dev_file_read' => 'file', 'dev_file_write' => 'file-edit', 'dev_file_list' => 'folder', 'dev_mode_on' => 'power', 'dev_mode_off' => 'power', 'prefer_saved' => 'gear', 'password_created' => 'plug' );
+$labels = array( 'write_builder' => 'Changed the layout of a page', 'write_meta' => 'Updated SEO fields', 'ability' => 'Used a tool of a plugin', 'dev_php' => 'Ran PHP code', 'dev_sql' => 'Read the database', 'dev_file_read' => 'Read a file', 'dev_file_write' => 'Wrote a file', 'dev_file_list' => 'Listed a folder', 'dev_mode_on' => 'Developer mode turned ON', 'dev_mode_off' => 'Developer mode turned OFF', 'prefer_saved' => 'Plugin tools choice saved', 'password_created' => 'Application Password created' );
 ?>
 <?php if ( ! $rows ) : ?>
 	<div class="owp-empty">Nothing yet. When your AI changes something, you will see it here.</div>

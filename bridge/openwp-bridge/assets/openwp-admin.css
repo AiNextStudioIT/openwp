@@ -102,3 +102,11 @@
 /* svg icons */
 .owp-ico svg{width:18px;height:18px;color:var(--b)}.owp-tick svg{width:14px;height:14px;stroke-width:3}.owp-badge svg{vertical-align:-1px;margin-right:2px}
 .owp-ico{color:var(--b)}
+
+/* modal */
+.owp-modal{position:fixed;inset:0;background:rgba(15,18,48,.55);z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(3px)}
+.owp-modal[hidden]{display:none}
+.owp-modal-box{background:#fff;border-radius:20px;padding:26px 28px;width:100%;max-width:520px;box-shadow:0 30px 80px rgba(15,18,48,.35);color:var(--ink)}
+.owp-modal-box h2{margin:0 0 6px;font-size:19px;font-weight:800;padding:0}
+.owp-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.owp-btn:disabled{opacity:.6;cursor:default}

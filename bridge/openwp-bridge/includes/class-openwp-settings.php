@@ -33,6 +33,7 @@ class OpenWP_Settings {
 		add_action( 'admin_post_openwp_bridge_prefer', array( __CLASS__, 'save_prefer' ) );
 		add_action( 'admin_post_openwp_bridge_restore', array( __CLASS__, 'do_restore' ) );
 		add_action( 'admin_post_openwp_bridge_forget', array( __CLASS__, 'do_forget' ) );
+		add_action( 'wp_ajax_openwp_bridge_create_pw', array( __CLASS__, 'ajax_create_pw' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'banner' ) );
 	}
 
@@ -48,6 +49,7 @@ class OpenWP_Settings {
 		$url = plugins_url( 'assets/', dirname( __FILE__ ) );
 		wp_enqueue_style( 'openwp-admin', $url . 'openwp-admin.css', array(), OPENWP_BRIDGE_VERSION );
 		wp_enqueue_script( 'openwp-admin', $url . 'openwp-admin.js', array(), OPENWP_BRIDGE_VERSION, true );
+		wp_localize_script( 'openwp-admin', 'openwpBridge', array( 'ajax' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'openwp_bridge_pw' ) ) );
 	}
 
 	/** A warning on every admin page while Developer mode is on. */
@@ -71,6 +73,32 @@ class OpenWP_Settings {
 	private static function back( $tab, array $extra = array() ) {
 		wp_safe_redirect( self::url( $tab, array_merge( array( 'done' => 1 ), $extra ) ) );
 		exit;
+	}
+
+	/** Creates an Application Password for the current user and returns it once, so the page can fill it in. */
+	public static function ajax_create_pw() {
+		check_ajax_referer( 'openwp_bridge_pw', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Not allowed.' );
+		}
+
+		$uid = get_current_user_id();
+
+		if ( ! class_exists( 'WP_Application_Passwords' ) || ! wp_is_application_passwords_available_for_user( $uid ) ) {
+			wp_send_json_error( 'Application Passwords are not available for this user. They need HTTPS, and some security plugins turn them off.' );
+		}
+
+		$name = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+		$res  = WP_Application_Passwords::create_new_application_password( $uid, array( 'name' => '' !== $name ? $name : 'OpenWP' ) );
+
+		if ( is_wp_error( $res ) ) {
+			wp_send_json_error( $res->get_error_message() );
+		}
+
+		OpenWP_Audit::add( 'password_created', '' !== $name ? $name : 'OpenWP' );
+
+		wp_send_json_success( array( 'password' => WP_Application_Passwords::chunk_password( $res[0] ), 'user' => wp_get_current_user()->user_login ) );
 	}
 
 	public static function save_dev() {
