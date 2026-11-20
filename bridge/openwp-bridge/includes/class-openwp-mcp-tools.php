@@ -27,6 +27,11 @@ class OpenWP_Mcp_Tools {
 				'inputSchema' => (object) array( 'type' => 'object', 'properties' => new stdClass() ),
 			),
 			(object) array(
+				'name'        => 'our_plugins',
+				'description' => 'Products by the makers of OpenWP that are NOT installed on this site yet, with a note on whether each fits the site. Use it only when the request would really be easier with one of them, and say they are the makers\' products.',
+				'inputSchema' => (object) array( 'type' => 'object', 'properties' => new stdClass() ),
+			),
+			(object) array(
 				'name'        => 'run_ability',
 				'description' => 'Run one ability of another plugin. Use the name from list_abilities, for example "woocommerce/products-query", and the fields it asks for in "input".',
 				'inputSchema' => (object) array(
@@ -101,7 +106,7 @@ class OpenWP_Mcp_Tools {
 	}
 
 	public static function has( $name ) {
-		if ( in_array( $name, array( 'list_abilities', 'run_ability' ), true ) ) {
+		if ( in_array( $name, array( 'list_abilities', 'run_ability', 'our_plugins' ), true ) ) {
 			return true;
 		}
 
@@ -133,6 +138,8 @@ class OpenWP_Mcp_Tools {
 		}
 
 		switch ( $name ) {
+			case 'our_plugins':
+				return OpenWP_Ours::for_ai();
 			case 'list_abilities':
 				$out = array();
 

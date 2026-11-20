@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       OpenWP Bridge
  * Description:       Optional companion of the OpenWP MCP server. Lets your AI agent read and edit page builder layouts (Elementor, Bricks, Divi, Gutenberg) and SEO fields, with a backup before every change. Includes a Developer mode (off by default) for staging sites.
- * Version:           0.5.1
+ * Version:           0.6.0
  * Requires at least: 6.0
  * Requires PHP:      7.4
  * Author:            AI Next Studio
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'OPENWP_BRIDGE_VERSION', '0.5.1' );
+define( 'OPENWP_BRIDGE_VERSION', '0.6.0' );
 define( 'OPENWP_BRIDGE_DIR', plugin_dir_path( __FILE__ ) );
 
 require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-icons.php';
@@ -30,6 +30,7 @@ require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-mcp-tools.php';
 require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-mcp.php';
 require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-rest.php';
 require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-presence.php';
+require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-ours.php';
 require_once OPENWP_BRIDGE_DIR . 'includes/class-openwp-settings.php';
 
 OpenWP_Rest::init();

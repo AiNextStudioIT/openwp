@@ -17,6 +17,7 @@ class OpenWP_Settings {
 			'copies'  => array( 'Safety copies', 'dashicons-backup' ),
 			'memory'  => array( 'Memory', 'dashicons-lightbulb' ),
 			'skills'  => array( 'Skills', 'dashicons-welcome-learn-more' ),
+			'ours'    => array( 'Our plugins', 'dashicons-plugins-checked' ),
 			'dev'     => array( 'Developer mode', 'dashicons-editor-code' ),
 			'log'     => array( 'Activity', 'dashicons-list-view' ),
 		);
@@ -27,6 +28,7 @@ class OpenWP_Settings {
 	}
 
 	public static function init() {
+		OpenWP_Ours::init();
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
 		add_action( 'admin_post_openwp_bridge_dev', array( __CLASS__, 'save_dev' ) );
