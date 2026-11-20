@@ -110,3 +110,5 @@
 .owp-modal-box h2{margin:0 0 6px;font-size:19px;font-weight:800;padding:0}
 .owp-modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
 .owp-btn:disabled{opacity:.6;cursor:default}
+
+.owp-todo{margin:0 0 12px;padding-left:20px;color:#3a4064}.owp-todo li{margin:3px 0}.owp-todo code,.owp-note code{background:#eef1ff;padding:1px 6px;border-radius:6px;font-size:12.5px}

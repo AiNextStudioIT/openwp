@@ -12,7 +12,7 @@ OpenWP connects Claude, Cursor, Windsurf and any AI that speaks MCP to your Word
 
 1. **Install the plugin.** Download `openwp-bridge.zip` from the [latest release](https://github.com/AiNextStudioIT/openwp/releases/latest). In WordPress go to *Plugins > Add New > Upload Plugin*, upload the zip and activate it.
 2. **Connect your AI.** Open **OpenWP** in the admin menu, then *Connect your AI*. Three steps: create an Application Password, type your user name and that password, copy the command it builds.
-3. **Paste the command** in Claude Code (Cursor and other clients: the same page gives the address and the header). Then talk to your site.
+3. **Follow the tab for your AI** (Claude Code, Codex, Cursor or other): the page tells you what to do, step by step, and builds the command for you. Then talk to your site.
 
 The plugin shows a green "OpenWP connected" light in the admin bar, keeps a log of what your AI did, and saves a copy before every layout change.
 

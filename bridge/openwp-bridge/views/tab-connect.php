@@ -23,12 +23,28 @@ defined( 'ABSPATH' ) || exit;
 			<h3>Copy the command for your AI</h3>
 			<div class="owp-tabs">
 				<button type="button" class="owp-tab on" data-pane="owp-p1">Claude Code</button>
+				<button type="button" class="owp-tab" data-pane="owp-p4">Codex</button>
 				<button type="button" class="owp-tab" data-pane="owp-p2">Cursor</button>
 				<button type="button" class="owp-tab" data-pane="owp-p3">Other</button>
 			</div>
-			<div id="owp-p1" class="owp-pane on"><div style="position:relative"><pre class="owp-code" id="owp-cc"></pre><button type="button" class="owp-copy" data-from="owp-cc">Copy</button></div></div>
-			<div id="owp-p2" class="owp-pane"><div style="position:relative"><pre class="owp-code" id="owp-cur"></pre><button type="button" class="owp-copy" data-from="owp-cur">Copy</button></div><p class="owp-note">Paste it in Cursor&#8217;s MCP settings (<code>mcp.json</code>).</p></div>
-			<div id="owp-p3" class="owp-pane"><div style="position:relative"><pre class="owp-code" id="owp-gen"></pre><button type="button" class="owp-copy" data-from="owp-gen">Copy</button></div><p class="owp-note">Any client that connects to an MCP address with a header works. Claude Desktop: not confirmed, use the OpenWP program from the README.</p></div>
+			<div id="owp-p1" class="owp-pane on">
+				<ol class="owp-todo"><li>Open the <strong>Terminal</strong> on your computer.</li><li>Paste the command below and press <strong>Enter</strong>.</li><li>Start Claude Code (type <code>claude</code>) and type <code>/mcp</code>: you will see <strong>openwp</strong> in the list.</li></ol>
+				<div style="position:relative"><pre class="owp-code" id="owp-cc"></pre><button type="button" class="owp-copy" data-from="owp-cc">Copy</button></div>
+			</div>
+			<div id="owp-p4" class="owp-pane">
+				<ol class="owp-todo"><li>Open the <strong>Terminal</strong> app on your computer (not the Codex chat: it is not allowed to write that file).</li><li>Paste the command below and press <strong>Enter</strong>. It adds OpenWP to the Codex settings file for you.</li><li><strong>Quit and reopen Codex.</strong> Then ask it &#8220;list the tools of openwp&#8221;.</li></ol>
+				<div style="position:relative"><pre class="owp-code" id="owp-cdx"></pre><button type="button" class="owp-copy" data-from="owp-cdx">Copy</button></div>
+				<p class="owp-note">Nothing else to install. The key is saved in <code>~/.codex/config.toml</code>, on your computer only. To cut the access, delete the password in your WordPress profile.</p>
+			</div>
+			<div id="owp-p2" class="owp-pane">
+				<ol class="owp-todo"><li>In Cursor open <strong>Settings &rarr; MCP</strong> (or the file <code>~/.cursor/mcp.json</code>).</li><li>Paste the text below. If the file already has servers, put the <code>openwp</code> block inside the existing <code>mcpServers</code>.</li><li>Save. <strong>openwp</strong> appears in the list with a green dot.</li></ol>
+				<div style="position:relative"><pre class="owp-code" id="owp-cur"></pre><button type="button" class="owp-copy" data-from="owp-cur">Copy</button></div>
+			</div>
+			<div id="owp-p3" class="owp-pane">
+				<ol class="owp-todo"><li>Open the settings of your AI program where you add an <strong>MCP server</strong> (type &#8220;HTTP&#8221; or &#8220;streamable HTTP&#8221;).</li><li>Enter the <strong>Address</strong> and add the <strong>Header</strong> as shown below.</li><li>Save and restart the program.</li></ol>
+				<div style="position:relative"><pre class="owp-code" id="owp-gen"></pre><button type="button" class="owp-copy" data-from="owp-gen">Copy</button></div>
+				<p class="owp-note">Claude Desktop: not confirmed. Use the OpenWP program from the README.</p>
+			</div>
 		</div></div>
 	</div>
 </div>
