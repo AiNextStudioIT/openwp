@@ -66,6 +66,16 @@ class OpenWP_Mcp_Tools {
 
 	/** @return mixed|WP_Error The data to send back, or an error. */
 	public static function call( $name, array $args ) {
+		if ( OpenWP_Abilities::is_ability_tool( $name ) ) {
+			return OpenWP_Abilities::call( $name, $args );
+		}
+
+		$refused = OpenWP_Abilities::refuse_ours( $name, $args );
+
+		if ( $refused ) {
+			return new WP_Error( 'openwp_choice', $refused );
+		}
+
 		$table = self::table();
 
 		if ( isset( $table[ $name ] ) ) {

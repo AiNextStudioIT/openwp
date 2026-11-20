@@ -34,6 +34,7 @@ OpenWP works without it. Add the **OpenWP Bridge** plugin to the site when you w
 - the AI can **read and change the layout** of pages built with **Elementor, Bricks, Divi** or the block editor, and fill the SEO fields of Yoast SEO and Rank Math;
 - a **copy is saved before every change**, and one tool puts it back;
 - **no program to install on your computer:** your AI connects straight to the site address with an Application Password (MCP over HTTP; tested with the official MCP client, Claude Code and Cursor accept this kind of address);
+- **the tools of your other plugins too.** Plugins that publish tools for AI with the WordPress Abilities API (WooCommerce, Elementor, Bricks, SEO plugins, forms...) are offered through the same address. For Elementor, Bricks and WooCommerce you choose, in *Tools > OpenWP Bridge*, who does the job: **OpenWP, the plugin's own tools, or both**;
 - a **green "OpenWP connected" light** in the admin bar and a page in *Tools > OpenWP Bridge* with a log of what the AI did;
 - an optional **Developer mode** (off by default, turns itself off after 1, 8 or 24 hours): the AI can run PHP, read the database and read/write files in `wp-content`. For test and staging sites only. You can forbid it for good with `define( 'OPENWP_BRIDGE_DISABLE_DEV', true );` in `wp-config.php`.
 

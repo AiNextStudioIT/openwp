@@ -13,6 +13,7 @@ class OpenWP_Settings {
 		add_action( 'admin_menu', array( __CLASS__, 'menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'assets' ) );
 		add_action( 'admin_post_openwp_bridge_dev', array( __CLASS__, 'save' ) );
+		add_action( 'admin_post_openwp_bridge_prefer', array( __CLASS__, 'save_prefer' ) );
 		add_action( 'admin_notices', array( __CLASS__, 'banner' ) );
 	}
 
@@ -28,6 +29,17 @@ class OpenWP_Settings {
 
 		echo '<div class="notice notice-warning"><p><strong>OpenWP Bridge: Developer mode is ON.</strong> Your AI agent can run code on this site. ';
 		echo '<a href="' . esc_url( admin_url( 'tools.php?page=' . self::PAGE ) ) . '">Turn it off</a>.</p></div>';
+	}
+
+	public static function save_prefer() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( 'Not allowed.' );
+		}
+
+		check_admin_referer( 'openwp_bridge_prefer' );
+		OpenWP_Abilities::save( wp_unslash( $_POST ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		wp_safe_redirect( admin_url( 'tools.php?page=' . self::PAGE . '&done=1' ) );
+		exit;
 	}
 
 	public static function save() {

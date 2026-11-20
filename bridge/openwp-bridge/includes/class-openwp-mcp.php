@@ -83,13 +83,17 @@ class OpenWP_Mcp {
 				return self::result( $id, (object) array() );
 
 			case 'tools/list':
-				return self::result( $id, array( 'tools' => OpenWP_Mcp_Tools::definitions() ) );
+				$ours = array_values( array_filter( OpenWP_Mcp_Tools::definitions(), function ( $t ) {
+					return ! in_array( $t->name, OpenWP_Abilities::hidden_ours(), true );
+				} ) );
+
+				return self::result( $id, array( 'tools' => array_merge( $ours, OpenWP_Abilities::tools() ) ) );
 
 			case 'tools/call':
 				$name = isset( $params['name'] ) ? (string) $params['name'] : '';
 				$args = isset( $params['arguments'] ) && is_array( $params['arguments'] ) ? $params['arguments'] : array();
 
-				if ( ! OpenWP_Mcp_Tools::has( $name ) ) {
+				if ( ! OpenWP_Abilities::is_ability_tool( $name ) && ! OpenWP_Mcp_Tools::has( $name ) ) {
 					return self::error( $id, -32602, 'Unknown tool: ' . $name );
 				}
 
