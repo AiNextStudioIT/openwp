@@ -289,7 +289,7 @@ Sites with plain permalinks (no `/wp-json/`) work too: OpenWP falls back to `?re
 
 ## License
 
-MIT — free forever.
+MIT — free forever. Copyright (c) 2026 [AI Next Studio](https://openwpmcp.com). If you copy or reuse the code, keep the copyright notice with the link to openwpmcp.com (see the [LICENSE](LICENSE) file).
 
 ## By
 
