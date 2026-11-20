@@ -4,6 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { EXTRA_TOOLS, isExtraTool, callExtraTool } from './lib/tools-skills.js';
 
+const UA = 'OpenWP/1.1.0';
 const WP_URL = (process.env.WP_URL || '').replace(/\/$/, '');
 const WP_USERNAME = process.env.WP_USERNAME || '';
 const WP_APP_PASSWORD = process.env.WP_APP_PASSWORD || '';
@@ -39,7 +40,7 @@ async function restUrl(namespace, endpoint) {
 async function wp(method, endpoint, body) {
   const opts = {
     method,
-    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json', 'User-Agent': UA },
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(await restUrl('wp/v2', endpoint), opts);
@@ -51,12 +52,28 @@ async function wp(method, endpoint, body) {
 async function wc(method, endpoint, body) {
   const opts = {
     method,
-    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json' },
+    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json', 'User-Agent': UA },
   };
   if (body) opts.body = JSON.stringify(body);
   const res = await fetch(await restUrl('wc/v3', endpoint), opts);
   const text = await res.text();
   if (!res.ok) throw new Error(`WC API ${res.status}: ${text}`);
+  return text ? JSON.parse(text) : {};
+}
+
+// The optional OpenWP Bridge plugin answers on /wp-json/openwp/v1.
+async function bridge(method, endpoint, body) {
+  const opts = {
+    method,
+    headers: { 'Authorization': `Basic ${auth}`, 'Content-Type': 'application/json', 'User-Agent': UA },
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const res = await fetch(await restUrl('openwp/v1', endpoint), opts);
+  const text = await res.text();
+  if (res.status === 404 && text.includes('rest_no_route')) {
+    throw new Error('The OpenWP Bridge plugin is not installed or not active on this site. Install and activate it (see the README), then try again.');
+  }
+  if (!res.ok) throw new Error(`OpenWP Bridge ${res.status}: ${text}`);
   return text ? JSON.parse(text) : {};
 }
 
@@ -596,7 +613,7 @@ async function resolvePlugin(input) {
 }
 
 async function callTool(name, args) {
-  if (isExtraTool(name)) return callExtraTool(name, args, { wp, siteUrl: WP_URL });
+  if (isExtraTool(name)) return callExtraTool(name, args, { wp, siteUrl: WP_URL, bridge });
   switch (name) {
     case 'get_posts': {
       const params = new URLSearchParams({ per_page: args.per_page || 10, page: args.page || 1, status: args.status || 'publish' });
@@ -761,6 +778,7 @@ async function callTool(name, args) {
         method: 'POST',
         headers: {
           'Authorization': `Basic ${auth}`,
+          'User-Agent': UA,
           'Content-Type': contentType,
           'Content-Disposition': `attachment; filename="${filename}"`,
         },

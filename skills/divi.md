@@ -16,7 +16,10 @@ The layout is stored in `post_content` as shortcodes, for example:
 A page opens with the Divi builder only if the post meta `_et_pb_use_builder` is `on`. That meta is NOT writable through the plain REST API. Consequences:
 
 - **Edit an existing Divi page** (it already has `_et_pb_use_builder = on`): read the raw content with `get_content_raw`, change only the text inside the modules, send it back with `update_page` or `update_post`. This works today.
-- **Create a new Divi page from scratch**: the page will render the shortcodes as plain text unless the meta is set. Needs the OpenWP Bridge (planned) or a Divi template imported by the user.
+- **Create a new Divi page from scratch**: the page renders the shortcodes as plain text unless `_et_pb_use_builder` is `on`. With the **OpenWP Bridge**, `set_builder_data` with `builder: "divi"` and `content` sets it for you (or use `set_page_meta`).
+
+## With the OpenWP Bridge
+`get_builder_data` returns the shortcode `content`; `set_builder_data` with `id` and the whole new `content` saves it (a copy is saved first, `restore_builder_backup` undoes it). Tested on Divi 5.18 with Divi 4 style shortcodes: edit, see it on the page, restore.
 
 ## Rules
 - Keep every `_builder_version` and attribute exactly as they are; change only the text between the tags.

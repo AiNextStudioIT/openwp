@@ -19,9 +19,17 @@ The layout is NOT in `post_content` (it stays empty). It is stored in post meta:
 ## What OpenWP can do today
 - Create and edit the page shell (title, status, slug, template) with `create_page` / `update_page`.
 - Install, activate or deactivate Elementor and its add-ons.
-- Read and write the layout: NOT possible with the plain REST API, because `_elementor_data` is not exposed. Needs the OpenWP Bridge (planned).
+- Read and write the layout: with the **OpenWP Bridge** installed (see below). Not possible with the plain REST API, because `_elementor_data` is not exposed.
 
-## Rules for when the layout can be written
+## With the OpenWP Bridge
+1. `bridge_status` checks that the plugin is active.
+2. `get_builder_data` with the page `id` returns `data`: the whole list of elements.
+3. Change only what was asked (for example the `title` of one `heading` widget), keep every `id`, `elType` and `widgetType`.
+4. `set_builder_data` with `id` and the whole `data` list. The bridge saves a copy first and clears the Elementor caches. The answer has the `backup` id.
+5. `restore_builder_backup` puts the old layout back if something is wrong.
+Tested: edit a heading, see it on the page, restore. The bridge writes the JSON correctly (one encoding, one slash), so the page is not corrupted.
+
+## Rules
 - `_elementor_data` is a JSON string saved already escaped. Never rewrite it with generic meta functions that escape again: it corrupts the page. Change it as a decoded structure and save it as one string.
 - After a change, delete the caches (`_elementor_css`, `_elementor_element_cache`) so the page regenerates.
 - Keep every widget `id`, and keep `elType` and `widgetType` untouched when only rewriting text.
