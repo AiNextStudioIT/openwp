@@ -25,7 +25,7 @@ OpenWP is an MCP server that connects Claude, Cursor, Windsurf and any AI agent 
 3. Scroll down to the **Application Passwords** section
 4. Type a name (e.g. `OpenWP`) in the field
 5. Click **Add New Application Password**
-6. Copy the generated string (e.g. `yCh9 LJkU ZQRb ZWxd N6i8 mj1d`) — you'll only see it once
+6. Copy the generated string (it looks like `xxxx xxxx xxxx xxxx xxxx xxxx`) — you'll only see it once
 
 > **Note:** If you use Wordfence, it may disable Application Passwords by default.
 > Go to Wordfence → Login Security → disable "Block Application Passwords" to enable them.
