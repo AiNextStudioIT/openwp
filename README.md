@@ -1,56 +1,52 @@
 # OpenWP
 
-Control WordPress with AI. Free. No plugin required. Forever.
+**Control WordPress with AI. Free.** Open source, MIT license.
 
-OpenWP is an MCP server that connects Claude, Cursor, Windsurf and any AI agent to your WordPress site via REST API — without installing anything on the server.
+OpenWP connects Claude, Cursor, Windsurf and any AI that speaks MCP to your WordPress site. You say "publish a post", "lower the price of that product" or "rewrite the top of this page", and it happens. Your AI talks straight to your site: nothing goes through our servers.
 
-**Landing page:** [openwp.ainextstudio.it](https://openwp.ainextstudio.it)
+**Website:** [openwpmcp.com](https://openwpmcp.com)
+
+---
+
+## Quick start: the easy way (5 minutes, nothing to install on your computer)
+
+1. **Install the plugin.** Download `openwp-bridge.zip` from the [latest release](https://github.com/AiNextStudioIT/openwp/releases/latest). In WordPress go to *Plugins > Add New > Upload Plugin*, upload the zip and activate it.
+2. **Connect your AI.** Open **OpenWP** in the admin menu, then *Connect your AI*. Three steps: create an Application Password, type your user name and that password, copy the command it builds.
+3. **Paste the command** in Claude Code (Cursor and other clients: the same page gives the address and the header). Then talk to your site.
+
+The plugin shows a green "OpenWP connected" light in the admin bar, keeps a log of what your AI did, and saves a copy before every layout change.
+
+## What your AI can do
+
+- **Content:** posts, pages, custom post types, media, comments, users, plugins and themes, site settings, search. 56 tools in total (list below).
+- **Page layouts:** read and change pages built with **Elementor, Bricks, Divi** or the block editor, with a **safety copy before every change** and a tool to put it back.
+- **SEO fields:** Yoast SEO, Rank Math, All in One SEO, SEOPress.
+- **WooCommerce:** products, orders, customers.
+- **The tools of your other plugins:** plugins that publish tools for AI with the WordPress Abilities API (WooCommerce, Elementor, Bricks, SEO plugins, forms...) are offered through the same address. For Elementor, Bricks and WooCommerce you choose who does the job: **OpenWP, the plugin's own tools, or both**.
+- **Skills and memory:** short guides your AI reads before working with a builder or plugin, and notes it keeps about your site between sessions.
+- **Developer mode** (off by default, turns itself off after 1, 8 or 24 hours): run PHP, read the database, read and write files in `wp-content`. For test and staging sites only. You can forbid it for good with `define( 'OPENWP_BRIDGE_DISABLE_DEV', true );` in `wp-config.php`.
+
+The plugin is not on WordPress.org on purpose, because of Developer mode.
 
 ---
 
 ## How it works, in plain words
 
-Think of OpenWP as a **translator** that sits on your computer.
+Think of OpenWP as a **translator** between your AI and your site. You talk to your AI as usual. The AI asks OpenWP to do it, and OpenWP does it on the site. The site only sees a normal user with an **Application Password**: a key you create in your profile and can delete at any time to cut the access.
 
-1. You talk to your AI (Claude, Cursor...) as usual: "list my last 5 posts", "create a draft about X", "lower the price of that product".
-2. The AI asks OpenWP to do it. OpenWP talks to your WordPress site and gives the answer back.
-3. The site only sees a normal user logging in with an **Application Password** (a key you create in your profile, which you can delete at any time).
+## Prefer no plugin?
 
-Nothing runs on a server of ours and nothing is installed on your site. That is why you will not see "OpenWP" inside WordPress, unless you add the optional [OpenWP Bridge](#openwp-bridge-optional-plugin) below, which also shows a green "connected" light.
-
-**Two ways to connect, pick one:**
-
-- **Easiest, with the plugin (no Node, nothing to install on your computer).** Install the [OpenWP Bridge](#openwp-bridge-optional-plugin) plugin on your site. In the **OpenWP** menu it gives you a ready command for Claude Code (and the address to use in Cursor and other clients). It works with the same 56 tools below.
-- **Without any plugin.** The program in this repository runs on your computer (needs Node 18+) and talks to the site through the REST API. Steps below.
-
-**For the no-plugin way you need three things, about 5 minutes:** (1) an Application Password from your WordPress profile, (2) this folder downloaded on your computer, (3) one command or one config entry that tells your AI where OpenWP is. The step-by-step guide is right below.
+OpenWP also works **without any plugin**: a small program that runs on your computer (Node 18+) and talks to your site through the official REST API. You get the content tools, the skills and the memory; layouts, SEO fields, safety copies and Developer mode need the plugin. Step by step below.
 
 ---
 
-## OpenWP Bridge (optional plugin)
-
-OpenWP works without it. Add the **OpenWP Bridge** plugin to the site when you want more:
-
-- the AI can **read and change the layout** of pages built with **Elementor, Bricks, Divi** or the block editor, and fill the SEO fields of Yoast SEO and Rank Math;
-- a **copy is saved before every change**, and one tool puts it back;
-- **no program to install on your computer:** your AI connects straight to the site address with an Application Password (MCP over HTTP; tested with the official MCP client, Claude Code and Cursor accept this kind of address);
-- **the tools of your other plugins too.** Plugins that publish tools for AI with the WordPress Abilities API (WooCommerce, Elementor, Bricks, SEO plugins, forms...) are offered through the same address. For Elementor, Bricks and WooCommerce you choose, in the **OpenWP** menu, who does the job: **OpenWP, the plugin's own tools, or both**;
-- a **green "OpenWP connected" light** in the admin bar and a page in the **OpenWP** menu with a log of what the AI did;
-- an optional **Developer mode** (off by default, turns itself off after 1, 8 or 24 hours): the AI can run PHP, read the database and read/write files in `wp-content`. For test and staging sites only. You can forbid it for good with `define( 'OPENWP_BRIDGE_DISABLE_DEV', true );` in `wp-config.php`.
-
-**Install:** build the zip with `bridge/build.sh` (or download it from the releases), then in WordPress go to *Plugins > Add New > Upload Plugin*, upload `openwp-bridge.zip` and activate it. It is not on WordPress.org on purpose, because of Developer mode.
-
----
-
-## Requirements
+## No plugin: the OpenWP program, step by step
 
 - Node.js 18+
 - WordPress 5.6+ with REST API enabled (default)
 - A WordPress Application Password
 
----
-
-## Setup — Step by Step
+### Setup
 
 ### Step 1 — Generate a WordPress Application Password
 
