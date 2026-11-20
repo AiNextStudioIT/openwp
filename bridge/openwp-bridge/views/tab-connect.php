@@ -24,6 +24,7 @@ defined( 'ABSPATH' ) || exit;
 			<div class="owp-tabs">
 				<button type="button" class="owp-tab on" data-pane="owp-p1">Claude Code</button>
 				<button type="button" class="owp-tab" data-pane="owp-p4">Codex</button>
+				<button type="button" class="owp-tab" data-pane="owp-p5">zcode</button>
 				<button type="button" class="owp-tab" data-pane="owp-p2">Cursor</button>
 				<button type="button" class="owp-tab" data-pane="owp-p3">Other</button>
 			</div>
@@ -35,6 +36,10 @@ defined( 'ABSPATH' ) || exit;
 				<ol class="owp-todo"><li>Open the <strong>Terminal</strong> app on your computer (not the Codex chat: it is not allowed to write that file).</li><li>Paste the command below and press <strong>Enter</strong>. It adds OpenWP to the Codex settings file for you.</li><li><strong>Quit and reopen Codex.</strong> Then ask it &#8220;list the tools of openwp&#8221;.</li></ol>
 				<div style="position:relative"><pre class="owp-code" id="owp-cdx"></pre><button type="button" class="owp-copy" data-from="owp-cdx">Copy</button></div>
 				<p class="owp-note">Nothing else to install. The key is saved in <code>~/.codex/config.toml</code>, on your computer only. To cut the access, delete the password in your WordPress profile.</p>
+			</div>
+			<div id="owp-p5" class="owp-pane">
+				<ol class="owp-todo"><li>In zcode open the <strong>MCP settings</strong>, or the file <code>~/.zcode/cli/config.json</code>.</li><li>Inside <code>"mcp"</code> &rarr; <code>"servers"</code> add the block below (keep a comma between servers).</li><li>Quit and reopen zcode, then start a <strong>new chat</strong>. <strong>openwp</strong> shows up in the MCP list.</li></ol>
+				<div style="position:relative"><pre class="owp-code" id="owp-zc"></pre><button type="button" class="owp-copy" data-from="owp-zc">Copy</button></div>
 			</div>
 			<div id="owp-p2" class="owp-pane">
 				<ol class="owp-todo"><li>In Cursor open <strong>Settings &rarr; MCP</strong> (or the file <code>~/.cursor/mcp.json</code>).</li><li>Paste the text below. If the file already has servers, put the <code>openwp</code> block inside the existing <code>mcpServers</code>.</li><li>Save. <strong>openwp</strong> appears in the list with a green dot.</li></ol>

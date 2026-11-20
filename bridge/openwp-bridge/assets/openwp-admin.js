@@ -14,6 +14,7 @@
 		var cur = JSON.stringify( { mcpServers: { openwp: { url: url, headers: { Authorization: 'Basic ' + b } } } }, null, 2 );
 		var gen = 'Address: ' + url + '\nHeader:  Authorization: Basic ' + b;
 		var cdx = "mkdir -p ~/.codex && touch ~/.codex/config.toml && cp ~/.codex/config.toml ~/.codex/config.toml.bak && awk '/^\\[mcp_servers\\.openwp(\\]|\\.)/{s=1;next} /^\\[/{s=0} !s' ~/.codex/config.toml.bak > ~/.codex/config.toml && cat >> ~/.codex/config.toml <<'EOF'\n\n[mcp_servers.openwp]\nurl = \"" + url + "\"\nhttp_headers = { \"Authorization\" = \"Basic " + b + "\" }\nEOF";
+		document.getElementById( 'owp-zc' ).textContent = '"openwp": ' + JSON.stringify( { type: 'http', url: url, headers: { Authorization: 'Basic ' + b } }, null, 2 );
 		document.getElementById( 'owp-cdx' ).textContent = cdx;
 		document.getElementById( 'owp-cc' ).textContent = cc;
 		document.getElementById( 'owp-cur' ).textContent = cur;
