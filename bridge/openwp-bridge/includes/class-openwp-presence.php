@@ -1,7 +1,7 @@
 <?php
 /**
  * Shows that OpenWP is connected: remembers the last request that came from OpenWP
- * (it sends a User-Agent "OpenWP/<version>") and shows it in the admin bar and in Tools > OpenWP Bridge.
+ * (it sends a User-Agent "OpenWP/<version>") and shows it in the admin bar and in the OpenWP menu (Developer mode).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -75,7 +75,7 @@ class OpenWP_Presence {
 			array(
 				'id'    => 'openwp-status',
 				'title' => '<span class="openwp-dot ' . ( $on ? 'on' : 'off' ) . '"></span>OpenWP',
-				'href'  => admin_url( 'tools.php?page=openwp-bridge' ),
+				'href'  => admin_url( 'admin.php?page=openwp-bridge' ),
 				'meta'  => array( 'title' => $on ? 'OpenWP is connected' : 'OpenWP not seen in the last 10 minutes' ),
 			)
 		);

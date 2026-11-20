@@ -2,7 +2,7 @@
 /**
  * Tools that other plugins register with the WordPress Abilities API (WooCommerce, Elementor, Bricks, SEO plugins...),
  * offered through the same MCP address. For some areas the site owner chooses who does the job:
- * OpenWP (our tools), the plugin's own tools, or both. The choice is made in Tools > OpenWP Bridge.
+ * OpenWP (our tools), the plugin's own tools, or both. The choice is made in the OpenWP menu (Developer mode).
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -129,7 +129,7 @@ class OpenWP_Abilities {
 		$area = self::area_of_ns( $ns );
 
 		if ( $area && 'openwp' === self::choice( $area ) ) {
-			return new WP_Error( 'openwp_choice', 'The site owner chose OpenWP\'s own tools for this area. Change it in Tools > OpenWP Bridge.' );
+			return new WP_Error( 'openwp_choice', 'The site owner chose OpenWP\'s own tools for this area. Change it in the OpenWP menu (Developer mode).' );
 		}
 
 		$input = $args ? $args : null;

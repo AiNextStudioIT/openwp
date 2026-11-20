@@ -2,7 +2,7 @@
 /**
  * Developer mode: run PHP, read the database and read/write files, for staging and test sites.
  *
- * - OFF by default. The owner turns it on in Tools > OpenWP Bridge, for 1 hour, 8 hours, 24 hours or until turned off.
+ * - OFF by default. The owner turns it on in the OpenWP menu (Developer mode), for 1 hour, 8 hours, 24 hours or until turned off.
  * - It turns itself off when the time ends.
  * - Only administrators can use it, and every call is written in the log.
  * - To forbid it on a site for good, add define( 'OPENWP_BRIDGE_DISABLE_DEV', true ); to wp-config.php.

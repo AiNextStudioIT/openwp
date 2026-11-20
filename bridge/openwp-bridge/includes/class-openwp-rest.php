@@ -63,7 +63,7 @@ class OpenWP_Rest {
 		}
 
 		if ( ! OpenWP_Dev::enabled() ) {
-			return new WP_Error( 'openwp_dev_off', 'Developer mode is off. The site owner turns it on in Tools > OpenWP Bridge.', array( 'status' => 403 ) );
+			return new WP_Error( 'openwp_dev_off', 'Developer mode is off. The site owner turns it on in the OpenWP menu (Developer mode).', array( 'status' => 403 ) );
 		}
 
 		return true;

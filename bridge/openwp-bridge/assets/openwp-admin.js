@@ -4,6 +4,7 @@
 	if ( ! root ) { return; }
 	var url = root.getAttribute( 'data-url' );
 	var u = document.getElementById( 'owp-u' ), p = document.getElementById( 'owp-p' );
+	if ( ! u || ! p ) { return; } // Only the Connect section has the command box.
 
 	function b64() { return btoa( u.value + ':' + p.value.replace( /\s+/g, ' ' ).trim() ); }
 
