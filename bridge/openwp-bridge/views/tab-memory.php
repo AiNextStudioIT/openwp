@@ -12,7 +12,7 @@ $notes = OpenWP_Memory::search( '' );
 		<ul class="owp-log">
 			<?php foreach ( $notes as $n ) : ?>
 				<li>
-					<div class="owp-ico">🧠</div>
+					<div class="owp-ico"><?php echo OpenWP_Icons::get( 'brain' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 					<div style="flex:1"><b><?php echo esc_html( $n['key'] ); ?></b><small><?php echo esc_html( $n['note'] ); ?><br><?php echo esc_html( human_time_diff( strtotime( $n['updated'] ), time() ) ); ?> ago</small></div>
 					<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 						<input type="hidden" name="action" value="openwp_bridge_forget"><input type="hidden" name="key" value="<?php echo esc_attr( $n['key'] ); ?>">

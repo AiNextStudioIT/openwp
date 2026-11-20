@@ -17,7 +17,7 @@ $posts = OpenWP_Settings::posts_with_copies();
 				<ul class="owp-log">
 					<?php foreach ( array_slice( $list, 0, 5 ) as $b ) : ?>
 						<li>
-							<div class="owp-ico">📋</div>
+							<div class="owp-ico"><?php echo OpenWP_Icons::get( 'clipboard' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></div>
 							<div style="flex:1"><b>Copy <?php echo (int) $b['id']; ?> &middot; <?php echo esc_html( $b['builder'] ); ?></b><small><?php echo esc_html( human_time_diff( strtotime( $b['time'] ), time() ) ); ?> ago<?php echo $b['note'] ? ' &middot; ' . esc_html( $b['note'] ) : ''; ?></small></div>
 							<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
 								<input type="hidden" name="action" value="openwp_bridge_restore"><input type="hidden" name="post" value="<?php echo (int) $id; ?>"><input type="hidden" name="backup" value="<?php echo (int) $b['id']; ?>">

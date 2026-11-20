@@ -48,7 +48,7 @@ $steps   = array(
 		<h2>Get started</h2>
 		<ul class="owp-check">
 			<?php foreach ( $steps as $s ) : ?>
-				<li class="<?php echo $s[1] ? 'done' : ''; ?>"><span class="owp-tick"><?php echo $s[1] ? '✓' : ''; ?></span>
+				<li class="<?php echo $s[1] ? 'done' : ''; ?>"><span class="owp-tick"><?php echo $s[1] ? OpenWP_Icons::get( 'check', 14 ) : ''; // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 					<?php echo $s[2] && ! $s[1] ? '<a href="' . esc_url( $s[2] ) . '">' . esc_html( $s[0] ) . '</a>' : esc_html( $s[0] ); ?></li>
 			<?php endforeach; ?>
 		</ul>

@@ -4,7 +4,7 @@ defined( 'ABSPATH' ) || exit;
 <div class="owp-dev <?php echo $on ? 'on' : ''; ?>">
 	<div class="owp-devrow">
 		<div style="max-width:560px">
-			<h2>Developer mode <span class="owp-badge <?php echo $on ? 'on' : ''; ?>"><?php echo $on ? '● ON' : '○ OFF'; ?></span></h2>
+			<h2>Developer mode <span class="owp-badge <?php echo $on ? 'on' : ''; ?>"><?php echo ( $on ? OpenWP_Icons::get( 'dot', 10 ) : OpenWP_Icons::get( 'ring', 10 ) ) . ( $on ? ' ON' : ' OFF' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span></h2>
 			<p>Lets the AI run PHP code, read the database and read or write files in <code>wp-content</code>. Powerful, and it can break a site. <strong>Test and staging sites only.</strong> It turns itself off when the time ends, and everything is logged.
 			<?php
 			if ( $on && $left < 31536000 ) {

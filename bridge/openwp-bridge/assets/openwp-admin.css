@@ -98,3 +98,7 @@
 .owp-main .owp-hero{margin:0}
 .owp-main .owp-card+.owp-card,.owp-main .owp-dev+.owp-card{margin-top:18px}
 @media(max-width:960px){.owp-app{flex-direction:column}.owp-side{position:static;width:100%}.owp-side nav{display:flex;flex-wrap:wrap;gap:4px}.owp-two{grid-template-columns:1fr}}
+
+/* svg icons */
+.owp-ico svg{width:18px;height:18px;color:var(--b)}.owp-tick svg{width:14px;height:14px;stroke-width:3}.owp-badge svg{vertical-align:-1px;margin-right:2px}
+.owp-ico{color:var(--b)}
