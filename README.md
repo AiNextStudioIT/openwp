@@ -300,8 +300,16 @@ Current limits, stated up front: the layout backup covers the page layout only (
 
 ## License
 
-MIT — free forever. Copyright (c) 2026 [AI Next Studio](https://openwpmcp.com). If you copy or reuse the code, keep the copyright notice with the link to openwpmcp.com (see the [LICENSE](LICENSE) file).
+MIT for the code. Copyright (c) 2026 [AI Next Studio](https://openwpmcp.com). If you copy or reuse the code, keep the copyright notice with the link to openwpmcp.com (see the [LICENSE](LICENSE) and [NOTICE](NOTICE) files). The names "OpenWP" and "OpenWP Bridge", the logo and openwpmcp.com are not part of the license: see [TRADEMARK.md](TRADEMARK.md). Want to contribute? Read [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## By
+
+OpenWP is made and maintained by [AI Next Studio](https://ainextstudio.it), an independent studio in Fiumicino, Italy, building tools that let AI work on WordPress.
+
+Also by us:
+
+- [funnelzi](https://wordpress.org/plugins/funnelzi/): sales funnels for WordPress, no WooCommerce needed.
+- [fluXtore](https://wordpress.org/plugins/fluxtore/): sales funnels for WooCommerce.
+- [rankAIzi](https://rankaizi.com): SEO, GEO and AEO for WordPress, fixed by talking to your AI.
 
 [AI Next Studio](https://ainextstudio.it) · [GitHub Org](https://github.com/AiNextStudioIT)
