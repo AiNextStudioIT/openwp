@@ -287,6 +287,17 @@ Sites with plain permalinks (no `/wp-json/`) work too: OpenWP falls back to `?re
 - [AI agents: what they are and how they work](https://raffaelemele.it/agenti-ai-cosa-sono-come-funzionano/) (in Italian)
 - [Elementor MCP: what it is and how it works](https://servizi-wp.it/elementor-mcp) (in Italian)
 
+## Community
+
+Questions, setup help and feature requests live in [Discussions](https://github.com/AiNextStudioIT/openwp/discussions). Two categories matter most:
+
+- **Q&A** — installation, Application Password, client configuration, builder support.
+- **Ideas** — what OpenWP should do next, voted by the people who use it.
+
+Bugs go to [Issues](https://github.com/AiNextStudioIT/openwp/issues): include the WordPress version, the builder and the exact prompt that failed.
+
+Current limits, stated up front: the layout backup covers the page layout only (last 10 copies per page) and does not include global presets, theme options or custom CSS. Builders other than Elementor, Bricks and Divi are handled at content level, not at layout level.
+
 ## License
 
 MIT — free forever. Copyright (c) 2026 [AI Next Studio](https://openwpmcp.com). If you copy or reuse the code, keep the copyright notice with the link to openwpmcp.com (see the [LICENSE](LICENSE) file).
