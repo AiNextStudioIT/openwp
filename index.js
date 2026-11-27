@@ -4,7 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { CallToolRequestSchema, ListToolsRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { EXTRA_TOOLS, isExtraTool, callExtraTool } from './lib/tools-skills.js';
 
-const UA = 'OpenWP/1.1.0';
+const UA = 'OpenWP/1.1.1';
 const WP_URL = (process.env.WP_URL || '').replace(/\/$/, '');
 const WP_USERNAME = process.env.WP_USERNAME || '';
 const WP_APP_PASSWORD = process.env.WP_APP_PASSWORD || '';
@@ -874,7 +874,7 @@ if (process.env.OPENWP_EXPORT_TOOLS) {
 }
 
 const server = new Server(
-  { name: 'openwp', version: '1.1.0', description: 'OpenWP by AI Next Studio — free WordPress MCP server, no plugin required. github.com/AiNextStudioIT/openwp' },
+  { name: 'openwp', version: '1.1.1', description: 'OpenWP by AI Next Studio — free WordPress MCP server, no plugin required. github.com/AiNextStudioIT/openwp' },
   { capabilities: { tools: {} } }
 );
 

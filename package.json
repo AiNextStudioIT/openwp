@@ -1,6 +1,6 @@
 {
   "name": "openwp",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "MCP server that gives AI agents full control over WordPress via REST API — no plugin required",
   "main": "index.js",
   "bin": {
