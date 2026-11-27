@@ -557,6 +557,7 @@ const TOOLS = [
         status: { type: 'string' },
         stock_quantity: { type: 'number' },
         manage_stock: { type: 'boolean' },
+        dry_run: { type: 'boolean', description: 'Only show before/after, write nothing' },
       },
       required: ['id'],
     },
@@ -583,6 +584,8 @@ const TOOLS = [
         id: { type: 'number', description: 'Order ID' },
         status: { type: 'string', description: 'pending, processing, completed, cancelled, refunded' },
         customer_note: { type: 'string', description: 'Note visible to customer' },
+        dry_run: { type: 'boolean', description: 'Only show before/after, write nothing' },
+        confirm: { type: 'boolean', description: 'Required to change the status: it can email the customer and change stock' },
       },
       required: ['id'],
     },
@@ -824,9 +827,14 @@ async function callTool(name, args) {
       return { id: product.id, name: product.name, status: product.status, price: product.price, permalink: product.permalink };
     }
     case 'update_woo_product': {
-      const { id, ...data } = args;
-      const product = await wc('PUT', `/products/${id}`, data);
-      return { id: product.id, name: product.name, status: product.status, price: product.price };
+      const { id, dry_run, ...data } = args;
+      const cur = await wc('GET', `/products/${id}`);
+      const before = {}, after = {};
+      for (const k of Object.keys(data)) if (String(cur[k]) !== String(data[k])) { before[k] = cur[k]; after[k] = data[k]; }
+      if (!Object.keys(after).length) return { id, changed: false, message: 'Nothing to change.' };
+      if (dry_run) return { id, written: false, before, after, how_to_apply: 'Call again without dry_run.' };
+      const product = await wc('PUT', `/products/${id}`, after);
+      return { id: product.id, name: product.name, status: product.status, price: product.price, previous: before };
     }
     case 'get_woo_orders': {
       const params = new URLSearchParams({ per_page: args.per_page || 10 });
@@ -837,9 +845,16 @@ async function callTool(name, args) {
       return orders.map(o => ({ id: o.id, status: o.status, total: o.total, currency: o.currency, date_created: o.date_created, customer_email: o.billing?.email, items: o.line_items?.length }));
     }
     case 'update_woo_order': {
-      const { id, ...data } = args;
-      const order = await wc('PUT', `/orders/${id}`, data);
-      return { id: order.id, status: order.status, total: order.total };
+      const { id, dry_run, confirm, ...data } = args;
+      const cur = await wc('GET', `/orders/${id}`);
+      const before = {}, after = {};
+      for (const k of Object.keys(data)) if (String(cur[k]) !== String(data[k])) { before[k] = cur[k]; after[k] = data[k]; }
+      if (!Object.keys(after).length) return { id, changed: false, message: 'Nothing to change.' };
+      const statusChange = 'status' in after;
+      const warning = statusChange ? 'Changing the status of an order can send an email to the customer, change stock and run hooks of other plugins.' : '';
+      if (dry_run || (statusChange && !confirm)) return { id, written: false, needs_confirm: statusChange && !dry_run, before, after, warning, how_to_apply: 'Call again without dry_run' + (statusChange ? ' and with confirm=true' : '') + '.' };
+      const order = await wc('PUT', `/orders/${id}`, after);
+      return { id: order.id, status: order.status, total: order.total, previous: before, ...(warning && { warning }) };
     }
     case 'get_woo_customers': {
       const params = new URLSearchParams({ per_page: args.per_page || 10, role: args.role || 'customer' });

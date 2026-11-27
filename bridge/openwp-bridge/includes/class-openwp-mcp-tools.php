@@ -144,6 +144,10 @@ class OpenWP_Mcp_Tools {
 			return new WP_Error( 'openwp_choice', $refused );
 		}
 
+		if ( 'update_woo_order' === $name || 'update_woo_product' === $name ) {
+			return self::woo_update( $name, $args );
+		}
+
 		$table = self::table();
 
 		if ( isset( $table[ $name ] ) ) {
@@ -255,6 +259,71 @@ class OpenWP_Mcp_Tools {
 		}
 
 		return new WP_Error( 'openwp_unknown_tool', 'Unknown tool: ' . $name );
+	}
+
+	/**
+	 * Safe WooCommerce updates. Reads the current values first, then:
+	 * - dry_run: returns before/after and writes nothing;
+	 * - orders: a status change (it can email the customer and change stock) needs confirm=true;
+	 * - the answer always carries the previous values, so a change can be undone by sending them back.
+	 */
+	private static function woo_update( $name, array $args ) {
+		$is_order = 'update_woo_order' === $name;
+		$path     = ( $is_order ? '/wc/v3/orders/' : '/wc/v3/products/' ) . (int) ( isset( $args['id'] ) ? $args['id'] : 0 );
+		$dry      = ! empty( $args['dry_run'] );
+		$confirm  = ! empty( $args['confirm'] );
+		unset( $args['id'], $args['dry_run'], $args['confirm'] );
+
+		$current = self::rest( 'GET', $path, array(), array(), '' );
+
+		if ( is_wp_error( $current ) ) {
+			return $current;
+		}
+
+		$before = array();
+		$after  = array();
+
+		foreach ( $args as $k => $v ) {
+			$old = isset( $current[ $k ] ) ? $current[ $k ] : null;
+
+			if ( $old !== $v && ( ! is_scalar( $old ) || ! is_scalar( $v ) || (string) $old !== (string) $v ) ) {
+				$before[ $k ] = $old;
+				$after[ $k ]  = $v;
+			}
+		}
+
+		if ( ! $before ) {
+			return array( 'id' => $current['id'], 'changed' => false, 'message' => 'Nothing to change: the values are already the same.' );
+		}
+
+		$status_change = $is_order && isset( $before['status'] );
+		$warning       = $status_change ? 'Changing the status of an order can send an email to the customer, change stock and run hooks of other plugins.' : '';
+
+		if ( $dry || ( $status_change && ! $confirm ) ) {
+			return array(
+				'id'                => $current['id'],
+				'written'           => false,
+				'needs_confirm'     => $status_change && ! $dry,
+				'before'            => $before,
+				'after'             => $after,
+				'warning'           => $warning,
+				'how_to_apply'      => 'Call again without dry_run' . ( $status_change ? ' and with confirm=true' : '' ) . '.',
+			);
+		}
+
+		$res = self::rest( 'PUT', $path, array(), $after, $is_order ? 'id,status,total' : 'id,name,status,price' );
+
+		if ( is_wp_error( $res ) ) {
+			return $res;
+		}
+
+		$res['previous'] = $before;
+
+		if ( $warning ) {
+			$res['warning'] = $warning;
+		}
+
+		return $res;
 	}
 
 	/** Returns an error if the post does not exist or the user may not edit it, otherwise null. */
